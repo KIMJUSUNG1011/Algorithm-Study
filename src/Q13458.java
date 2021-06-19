@@ -22,16 +22,12 @@ public class Q13458 {
         for (int i = 0; i < n; i++) {
             int spare = a[i] - b;
             if (spare > 0) {
-                if (spare <= c) {
-                    answer++;
+                int x = spare / c;
+                int y = spare % c;
+                if (y == 0) {
+                    answer += x;
                 } else {
-                    int x = spare / c;
-                    int y = spare % c;
-                    if (y == 0) {
-                        answer += x;
-                    } else {
-                        answer += x + 1;
-                    }
+                    answer += x + 1;
                 }
             }
         }
