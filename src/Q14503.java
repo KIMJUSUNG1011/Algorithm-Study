@@ -7,6 +7,7 @@ public class Q14503 {
     static int n, m, dir;
     static int[][] map = new int[51][51];
     static int[][] delta = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    static int answer = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,19 +26,32 @@ public class Q14503 {
             }
         }
 
-        // 청소한 영역은 2 로 표시
-        map[robot[0]][robot[1]] = 2;
+        solve(robot[0], robot[1], dir);
+        System.out.print(answer);
+    }
 
-        // 2 의 개수 세기
-        int answer = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (map[i][j] == 2) {
-                   answer++;
-                }
+    static void solve(int x, int y, int dir) {
+        // 청소한 영역은 2 로 표시
+        if (map[x][y] == 0) {
+            map[x][y] = 2;
+            answer++;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            dir = (dir + 3) % 4;
+            int nx = x + delta[dir][0];
+            int ny = y + delta[dir][1];
+
+            if (map[nx][ny] == 0) {
+                solve(nx, ny, dir);
+                return;
             }
         }
 
-        System.out.print(answer);
+        int bx = x + delta[(dir + 2) % 4][0];
+        int by = y + delta[(dir + 2) % 4][1];
+        if (map[bx][by] == 2) {
+            solve(bx, by, dir);
+        }
     }
 }
