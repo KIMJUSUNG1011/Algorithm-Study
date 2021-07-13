@@ -38,6 +38,7 @@ public class Q14503 {
         }
 
         for (int i = 0; i < 4; i++) {
+            // 왼쪽 방향으로 이동
             dir = (dir + 3) % 4;
             int nx = x + delta[dir][0];
             int ny = y + delta[dir][1];
@@ -47,6 +48,8 @@ public class Q14503 {
                 return;
             }
         }
+
+        // for 문이 정상적으로 끝났다면 네 방향 모두 청소가 되어있거나 벽인 경우
 
         int bx = x + delta[(dir + 2) % 4][0];
         int by = y + delta[(dir + 2) % 4][1];
