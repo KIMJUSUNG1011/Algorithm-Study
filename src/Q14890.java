@@ -24,18 +24,14 @@ public class Q14890 {
         int i, j;
         for (i = 0; i < n; i++) {
             int cur_cnt = 1;
-            for (j = 0; j < n; j++) {
-                if (j == n - 1) {
-                    continue;
-                }
+            for (j = 0; j < n - 1; j++) {
                 if (map[i][j] == map[i][j + 1]) {
                     cur_cnt++;
                 } else if (map[i][j] + 1 == map[i][j + 1]) {
                     if (cur_cnt < l) {
                         break;
-                    } else {
-                        cur_cnt = 1;
                     }
+                    cur_cnt = 1;
                 } else if (map[i][j] - 1 == map[i][j + 1]) {
                     int next = map[i][j + 1];
                     int k = j + 1;
@@ -52,25 +48,21 @@ public class Q14890 {
                     break;
                 }
             }
-            if (j == n) {
+            if (j == n - 1) {
                 answer++;
             }
         }
 
         for (i = 0; i < n; i++) {
             int cur_cnt = 1;
-            for (j = 0; j < n; j++) {
-                if (j == n - 1) {
-                    continue;
-                }
+            for (j = 0; j < n - 1; j++) {
                 if (map[j][i] == map[j + 1][i]) {
                     cur_cnt++;
                 } else if (map[j][i] + 1 == map[j + 1][i]) {
                     if (cur_cnt < l) {
                         break;
-                    } else {
-                        cur_cnt = 1;
                     }
+                    cur_cnt = 1;
                 } else if (map[j][i] - 1 == map[j + 1][i]) {
                     int next = map[j + 1][i];
                     int k = j + 1;
@@ -87,7 +79,7 @@ public class Q14890 {
                     break;
                 }
             }
-            if (j == n) {
+            if (j == n - 1) {
                 answer++;
             }
         }
