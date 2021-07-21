@@ -27,14 +27,8 @@ public class Q14503_2 {
 
         // 청소한 구역은 2 로 표시
         board[r][c] = 2;
+        answer++;
         move(r, c, d);
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (board[i][j] == 2) {
-                    answer++;
-                }
-            }
-        }
         System.out.print(answer);
     }
 
@@ -47,6 +41,7 @@ public class Q14503_2 {
             // 한 방향이라도 이동할 방향이 있을 경우 후진을 하지 않음
             if (board[nr][nc] == 0) {
                 board[nr][nc] = 2;
+                answer++;
                 move(nr, nc, d);
                 return;
             }
