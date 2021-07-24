@@ -32,29 +32,26 @@ class Q14890_2 {
                     } else if (h == 0) {
                         cnt++;
                     } else if (h == -1) {
-                        if (cnt >= L) {
-                            cnt = 1;
-                        } else {
+                        if (cnt < L) {
                             flag = false;
                             break;
                         }
+                        cnt = 1;
                     } else {
                         cnt = 1;
                         while (++j < N - 1) {
                             int tmpH = k == 1 ? map[i][j] - map[i][j + 1] : map[j][i] - map[j + 1][i];
-                            if (tmpH == 0) {
-                                cnt++;
-                            } else {
+                            if (tmpH != 0) {
                                 break;
                             }
+                            cnt++;
                         }
                         if (cnt < L) {
                             flag = false;
                             break;
-                        } else {
-                            cnt -= L;
-                            j--;
                         }
+                        cnt -= L;
+                        j--;
                     }
                 }
                 if (flag) {
