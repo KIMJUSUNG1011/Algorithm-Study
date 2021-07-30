@@ -130,7 +130,7 @@ public class Q17143 {
 
         if (shark.r == 1 && shark.c == 3) {
             if (aa) {
-                System.out.println(shark.d);
+                System.out.println("dir:"+ shark.d);
             }
         }
     }
