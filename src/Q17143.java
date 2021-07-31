@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Q17143 {
     static int R, C, M;
-    static int[][] max;
     static PriorityQueue<Shark> q = new PriorityQueue<>(new Comparator<Shark>() {
         @Override
         public int compare(Shark o1, Shark o2) {
@@ -12,7 +11,7 @@ public class Q17143 {
             } else if (o1.r != o2.r) {
                 return o1.r - o2.r;
             } else {
-                return o1.z - o2.z;
+                return o2.z - o1.z;
             }
         }
     });
@@ -34,53 +33,26 @@ public class Q17143 {
             q.add(new Shark(r, c, s, d, z));
         }
 
-        /*
-        while (!q.isEmpty()) {
-            Shark shark = q.poll();
-            System.out.print(shark + " / ");
-            move_shark(shark);
-            System.out.println(shark);
-        }
-       */
-
         int answer = 0;
+        Set<Shark> tmp = new HashSet<>();
         for (int i = 1; i <= C; i++) {
-            max = new int[101][101];
+            int[][] max = new int[R + 1][C + 1];
             boolean flag = false;
-            int len = q.size();
-            for (int j = 0; j < len; j++) {
+            while (!q.isEmpty()) {
                 Shark shark = q.poll();
-                if (shark == null) {
-                    break;
+                if (shark.c == i && !flag) {
+                    answer += shark.z;
+                    flag = true;
+                    continue;
                 }
-                if (!flag) {
-                    if (shark.c == i) {
-                        System.out.print(i + ":");
-                        System.out.println(shark);
-                        answer += shark.z;
-                        flag = true;
-                        continue;
-                    }
-                }
-
                 move_shark(shark);
-
-                if (max[shark.r][shark.c] < shark.z) {
-                    System.out.println(shark);
-                    max[shark.r][shark.c] = shark.z;
-                    q.add(shark);
-                }
+                tmp.add(shark);
             }
-            len = q.size();
-            for (int j = 0; j < len; j++) {
+            q.addAll(tmp);
+            tmp.clear();
+            while (!q.isEmpty()) {
                 Shark shark = q.poll();
-                if (shark == null) {
-                    break;
-                }
-                if (max[shark.r][shark.c] == shark.z) {
-                    // System.out.println(shark);
-                    q.add(shark);
-                }
+
             }
         }
 
@@ -88,14 +60,6 @@ public class Q17143 {
     }
 
     static void move_shark(Shark shark) {
-        boolean aa = false;
-
-        if (shark.r == 1 && shark.c == 5) {
-            aa = true;
-        }
-
-        Shark tmp = new Shark(shark.r, shark.c, shark.s, shark.d, shark.z);
-
         int dir = shark.d;
         int speed = shark.s;
         int start = dir == 1 || dir == 2 ? shark.r : shark.c;
@@ -131,13 +95,6 @@ public class Q17143 {
         }
 
         shark.d = dir;
-
-        if (shark.r == 1 && shark.c == 3) {
-            if (aa) {
-                // System.out.println(tmp);
-                // System.out.println(shark);
-            }
-        }
     }
 
     static class Shark {
