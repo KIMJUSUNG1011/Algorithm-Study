@@ -18,7 +18,7 @@ public class Q17143 {
     });
 
     public static void main(String[] args) throws IOException {
-        BufferedReader  br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
@@ -55,7 +55,7 @@ public class Q17143 {
                 }
                 if (!flag) {
                     if (shark.c == i) {
-                        System.out.print(i+":");
+                        System.out.print(i + ":");
                         System.out.println(shark);
                         answer += shark.z;
                         flag = true;
@@ -66,6 +66,7 @@ public class Q17143 {
                 move_shark(shark);
 
                 if (max[shark.r][shark.c] < shark.z) {
+                    System.out.println(shark);
                     max[shark.r][shark.c] = shark.z;
                     q.add(shark);
                 }
@@ -77,6 +78,7 @@ public class Q17143 {
                     break;
                 }
                 if (max[shark.r][shark.c] == shark.z) {
+                    // System.out.println(shark);
                     q.add(shark);
                 }
             }
@@ -91,6 +93,8 @@ public class Q17143 {
         if (shark.r == 1 && shark.c == 5) {
             aa = true;
         }
+
+        Shark tmp = new Shark(shark.r, shark.c, shark.s, shark.d, shark.z);
 
         int dir = shark.d;
         int speed = shark.s;
@@ -130,7 +134,8 @@ public class Q17143 {
 
         if (shark.r == 1 && shark.c == 3) {
             if (aa) {
-                System.out.println("dir:"+ shark.d);
+                // System.out.println(tmp);
+                // System.out.println(shark);
             }
         }
     }
