@@ -3,18 +3,7 @@ import java.util.*;
 
 public class Q17143 {
     static int R, C, M;
-    static PriorityQueue<Shark> q = new PriorityQueue<>(new Comparator<Shark>() {
-        @Override
-        public int compare(Shark o1, Shark o2) {
-            if (o1.c != o2.c) {
-                return o1.c - o2.c;
-            } else if (o1.r != o2.r) {
-                return o1.r - o2.r;
-            } else {
-                return o2.z - o1.z;
-            }
-        }
-    });
+    static Map<Integer, Shark> map = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -30,30 +19,38 @@ public class Q17143 {
             int s = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
             int z = Integer.parseInt(st.nextToken());
-            q.add(new Shark(r, c, s, d, z));
+
+            // 좌표를 하나의 정수로 표현하여 맵의 키로 사용
+            int rc = C * (r - 1) + c;
+            map.put(rc, new Shark(r, c, s, d, z));
         }
 
-        int answer = 0;
-        Set<Shark> tmp = new HashSet<>();
+        long answer = 0;
+        Map<Integer, Shark> tmp_map = new HashMap<>();
         for (int i = 1; i <= C; i++) {
-            int[][] max = new int[R + 1][C + 1];
             boolean flag = false;
-            while (!q.isEmpty()) {
-                Shark shark = q.poll();
-                if (shark.c == i && !flag) {
+            for (Integer rc : map.keySet()) {
+                Shark shark = map.get(rc);
+
+                // 지면에서 가장 가까운 상어를 잡음
+                if (!flag && (rc - i) % C == 0) {
                     answer += shark.z;
                     flag = true;
-                    continue;
-                }
-                move_shark(shark);
-                tmp.add(shark);
-            }
-            q.addAll(tmp);
-            tmp.clear();
-            while (!q.isEmpty()) {
-                Shark shark = q.poll();
+                } else {
+                    // 상어들을 이동시킴
+                    move_shark(shark);
 
+                    // 가장 큰 상어만 남김
+                    int newRC = C * (shark.r - 1) + shark.c;
+                    int z = tmp_map.get(newRC) == null ? 0 : tmp_map.get(newRC).z;
+                    if (z < shark.z) {
+                        tmp_map.put(newRC, shark);
+                    }
+                }
             }
+            map.clear();
+            map.putAll(tmp_map);
+            tmp_map.clear();
         }
 
         System.out.print(answer);
