@@ -3,7 +3,8 @@ import java.util.*;
 
 public class Q17143 {
     static int R, C, M;
-    static Map<Integer, Shark> map = new HashMap<>();
+    static Map<Integer, Shark> map = new TreeMap<>();
+    static Map<Integer, Shark> tmp_map = new TreeMap<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -26,7 +27,6 @@ public class Q17143 {
         }
 
         long answer = 0;
-        Map<Integer, Shark> tmp_map = new HashMap<>();
         for (int i = 1; i <= C; i++) {
             boolean flag = false;
             for (Integer rc : map.keySet()) {
