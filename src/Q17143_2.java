@@ -1,17 +1,17 @@
 import java.io.*;
 import java.util.*;
 
-public class Q17143 {
+public class Q17143_2 {
     static int R, C, M;
-    static Map<Integer, Shark> map = new TreeMap<>();
-    static Map<Integer, Shark> tmp_map = new TreeMap<>();
+    static Shark[][] map, tmp_map;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
+        map = new Shark[R + 1][C + 1];
 
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
@@ -20,37 +20,38 @@ public class Q17143 {
             int s = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
             int z = Integer.parseInt(st.nextToken());
-
-            // 좌표를 하나의 정수로 표현하여 맵의 키로 사용
-            int rc = C * (r - 1) + c;
-            map.put(rc, new Shark(r, c, s, d, z));
+            map[r][c] = new Shark(r, c, s, d, z);
         }
 
         long answer = 0;
         for (int i = 1; i <= C; i++) {
-            boolean flag = false;
-            for (Integer rc : map.keySet()) {
-                Shark shark = map.get(rc);
+            // 지면과 가장 가까운 상어 잡기
+            for (int j = 1; j <= R; j++) {
+                if (map[j][i] != null) {
+                    answer += map[j][i].z;
+                    map[j][i] = null;
+                    break;
+                }
+            }
 
-                // 지면에서 가장 가까운 상어를 잡음
-                if (!flag && (rc - i) % C == 0) {
-                    answer += shark.z;
-                    flag = true;
-                } else {
-                    // 상어들을 이동시킴
-                    move_shark(shark);
+            // 상어 이동
+            tmp_map = new Shark[R + 1][C + 1];
+            for (int j = 1; j <= R; j++) {
+                for (int k = 1; k <= C; k++) {
+                    if (map[j][k] != null) {
+                        move_shark(map[j][k]);
+                        Shark cur_shark = map[j][k];
+                        Shark prev_shark = tmp_map[cur_shark.r][cur_shark.c];
 
-                    // 가장 큰 상어만 남김
-                    int newRC = C * (shark.r - 1) + shark.c;
-                    int z = tmp_map.get(newRC) == null ? 0 : tmp_map.get(newRC).z;
-                    if (z < shark.z) {
-                        tmp_map.put(newRC, shark);
+                        // 이동한 위치에 이미 상어가 있는 경우 큰 상어가 작은 상어를 잡아먹음
+                        if (prev_shark == null || prev_shark.z < cur_shark.z) {
+                            tmp_map[cur_shark.r][cur_shark.c] = cur_shark;
+                        }
                     }
                 }
             }
-            map.clear();
-            map.putAll(tmp_map);
-            tmp_map.clear();
+
+            map = tmp_map;
         }
 
         System.out.print(answer);
