@@ -48,6 +48,7 @@ public class Q5373 {
                 }
             }
         } else {
+            // 주변 회전
             char[] tmp = new char[3];
             for (int i = 0; i <= 2; i++) {
                 tmp[i] = cube[info[nFace][i + 9] / 9][info[nFace][i + 9] % 9];
@@ -91,8 +92,6 @@ public class Q5373 {
                 cube[4][i] = 'w';
                 cube[5][i] = 'y';
             }
-
-            // System.out.println("00 : " + cube[0][0]);
 
             // 매핑 테이블 초기화
             conv['F'] = 0;
