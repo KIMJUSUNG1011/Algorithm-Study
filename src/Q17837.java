@@ -32,14 +32,10 @@ public class Q17837 {
 
         int cnt = 0;
         while (cnt++ <= 1000) {
-            boolean endFlag = false;
-
             //  1번부터 K번 말까지 이동
             for (Horse horse : horses) {
                 int num = horse.num, r = horse.r, c = horse.c, dir = horse.dir;
                 int nr = r + delta[dir][0], nc = c + delta[dir][1];
-
-                System.out.println(num +" : " + nr +","+ nc + ", "+ dir);
 
                 // 벽 또는 파란 칸으로 이동한 경우
                 if ((nr <= 0 || nc <= 0 || nr > N || nc > N) || map[nr][nc] == 2) {
@@ -47,89 +43,47 @@ public class Q17837 {
                     horse.dir = dir;
                     nr = r + delta[dir][0];
                     nc = c + delta[dir][1];
-
-                    // 방향을 바꿔서 한 칸 이동
-                    if ((nr > 0 && nc > 0 && nr <= N && nc <= N) && map[nr][nc] != 2) {
-                        Deque<Horse> tmp = new LinkedList<>();
-                        System.out.print("num : " );
-                        while (true) {
-                            Horse h = boards[r][c].stack.pop();
-                            System.out.print(h.num+ " ");
-                            h.r = nr;
-                            h.c = nc;
-                            tmp.add(h);
-                            if (h.num == num) {
-                                break;
-                            }
-                        }
-                        System.out.println();
-
-                        if (map[nr][nc] == 0) {
-                            while (!tmp.isEmpty()) {
-                                boards[nr][nc].stack.push(tmp.pollLast());
-                            }
-                        } else {
-                            while (!tmp.isEmpty()) {
-                                boards[nr][nc].stack.push(tmp.poll());
-                            }
-                        }
-
-                        System.out.println("size: " + boards[nr][nc].stack.size());
-
-                        if (boards[nr][nc].stack.size() >= 4) {
-                            // System.out.print(nr+","+nc+": ");
-                            // System.out.println(boards[nr][nc].stack.size());
-                            endFlag = true;
-                            break;
-                        }
-                    }
-                } else {
-                    Deque<Horse> tmp = new LinkedList<>();
-                    while (true) {
-                        Horse h = boards[r][c].stack.pop();
-                        h.r = nr;
-                        h.c = nc;
-                        tmp.add(h);
-                        if (h.num == num) {
-                            break;
-                        }
-                    }
-
-                    // System.out.println("pre_size: " + boards[nr][nc].stack.size());
-
-                    if (map[nr][nc] == 0) {
-                        while (!tmp.isEmpty()) {
-                            boards[nr][nc].stack.push(tmp.pollLast());
-                        }
-                    } else {
-                        while (!tmp.isEmpty()) {
-                            boards[nr][nc].stack.push(tmp.poll());
-                        }
-                    }
-
-                    System.out.println("size: " + boards[nr][nc].stack.size());
-
-                    if (boards[nr][nc].stack.size() >= 4) {
-                        // System.out.print(nr+","+nc+": ");
-                        // System.out.println(boards[nr][nc].stack.size());
-                        endFlag = true;
-                        break;
-                    }
                 }
-            }
-            System.out.println();
 
-            if (endFlag) {
-                System.out.println("check");
-                break;
+                if (move(num, r, c, nr, nc)) {
+                    System.out.print(cnt);
+                    return;
+                }
             }
         }
 
         if (cnt >= 1001) {
             System.out.print(-1);
-        } else {
-            System.out.print(cnt);
         }
+    }
+
+    static boolean move(int num, int r, int c, int nr, int nc) {
+        if ((nr <= 0 || nc <= 0 || nr > N || nc > N) || map[nr][nc] == 2) {
+            return false;
+        }
+
+        Deque<Horse> tmp = new LinkedList<>();
+        while (true) {
+            Horse h = boards[r][c].stack.pop();
+            h.r = nr;
+            h.c = nc;
+            tmp.add(h);
+            if (h.num == num) {
+                break;
+            }
+        }
+
+        if (map[nr][nc] == 0) {
+            while (!tmp.isEmpty()) {
+                boards[nr][nc].stack.push(tmp.pollLast());
+            }
+        } else {
+            while (!tmp.isEmpty()) {
+                boards[nr][nc].stack.push(tmp.poll());
+            }
+        }
+
+        return boards[nr][nc].stack.size() >= 4;
     }
 
     static class Board {
