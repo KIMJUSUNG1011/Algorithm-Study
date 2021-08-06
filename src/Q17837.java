@@ -52,9 +52,7 @@ public class Q17837 {
             }
         }
 
-        if (cnt >= 1001) {
-            System.out.print(-1);
-        }
+        System.out.print(-1);
     }
 
     static boolean move(int num, int r, int c, int nr, int nc) {
@@ -73,14 +71,8 @@ public class Q17837 {
             }
         }
 
-        if (map[nr][nc] == 0) {
-            while (!tmp.isEmpty()) {
-                boards[nr][nc].stack.push(tmp.pollLast());
-            }
-        } else {
-            while (!tmp.isEmpty()) {
-                boards[nr][nc].stack.push(tmp.poll());
-            }
+        while (!tmp.isEmpty()) {
+            boards[nr][nc].stack.push(map[nr][nc] == 0 ? tmp.pollLast() : tmp.poll());
         }
 
         return boards[nr][nc].stack.size() >= 4;
