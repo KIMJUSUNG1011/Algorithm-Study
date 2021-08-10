@@ -56,9 +56,7 @@ public class Q17144_2 {
             for (int j = 0; j < C; j++) {
                 if (board[i][j] == -1) {
                     tmp[i][j] = -1;
-                    continue;
-                }
-                if (board[i][j] != 0) {
+                } else if (board[i][j] != 0) {
                     int cnt = 0;
                     int amount = board[i][j] / 5;
                     for (int k = 0; k < 4; k++) {
