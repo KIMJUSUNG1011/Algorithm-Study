@@ -1,11 +1,15 @@
+// 블로거 '안산학생' 님의 코드의 도움을 받았습니다.
 import java.io.*;
 import java.util.*;
 
 public class Q17825 {
     static int[] dice = new int[10];
+    static int[] horse = new int[4];
     static int[] score = new int[33];
     static int[] board = new int[33];
+    static int[] visited = new int[33];
     static int[] turn = new int[33];
+    static int max = Integer.MIN_VALUE;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,6 +18,47 @@ public class Q17825 {
             dice[i] = Integer.parseInt(st.nextToken());
         }
         init();
+        go(0, 0);
+        System.out.print(max);
+    }
+
+    static void go(int idx, int sum) {
+
+        if (idx == 10) {
+            max = Math.max(max, sum);
+            return;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int dice_val = dice[idx];
+            int prev = horse[i];
+            int now = prev;
+
+            // 현재 위치가 파란색 칸인 경우
+            if (turn[now] > 0) {
+                now = turn[now];
+                dice_val--;
+            }
+
+            // 주사위 값 만큼 위치를 이동
+            while (dice_val-- > 0) {
+                now = board[now];
+            }
+
+            // 이동한 위치에 이미 다른 주사위가 있는 경우 말을 고르지 않음
+            // 단, 이동을 마치는 칸이 도착점인 경우 고를 수 있도록 함
+            if (visited[now] != 0 && now != 21) {
+                continue;
+            }
+
+            horse[i] = now;
+            visited[prev] = 0;
+            visited[now] = 1;
+            go(idx + 1, sum + score[now]);
+            visited[now] = 0;
+            visited[prev] = 1;
+            horse[i] = prev;
+        }
     }
 
     static void init() {
