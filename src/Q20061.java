@@ -37,6 +37,7 @@ public class Q20061 {
 
     static void blue_process(int t, int x) {
 
+        // 블록 쌓기
         if (t == 1 || t == 2) {
             int pos = 0;
             while (pos <= 5 && blue[x][pos] != 1) {
@@ -177,14 +178,6 @@ public class Q20061 {
                 }
             }
         }
-    }
-
-    static void print(int[][] arr) {
-        for (int[] ints : arr) {
-            for (int anInt : ints) {
-                System.out.print(anInt + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
 
