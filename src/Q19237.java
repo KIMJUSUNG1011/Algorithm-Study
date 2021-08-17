@@ -38,7 +38,8 @@ public class Q19237 {
         }
 
         int t = 0;
-        while (t <= 1000 && isEnd()) {
+        int cnt = M;
+        while (t <= 1000 && cnt != 1) {
 
             // 상어가 자신의 냄새를 남김
             for (int i = 1; i <= M; i++) {
@@ -84,11 +85,6 @@ public class Q19237 {
 
                 // 인접한 빈칸이 없는 경우 자신의 냄새가 있는 칸으로 이동
                 if (!flag) {
-                    if (mySmellDir == -1) {
-                        System.out.println("num : " + num);
-                        printSharks();
-                        printBoard();
-                    }
                     shark.r = r + delta[mySmellDir][0];
                     shark.c = c + delta[mySmellDir][1];
                     shark.dir = mySmellDir;
@@ -98,6 +94,7 @@ public class Q19237 {
                 // 이동한 칸에 이미 다른 상어가 있는 경우 스스로를 삭제
                 if (visited[shark.r][shark.c]) {
                     sharks[i] = null;
+                    cnt--;
                 } else {
                     visited[shark.r][shark.c] = true;
                 }
@@ -111,14 +108,6 @@ public class Q19237 {
             t = -1;
         }
         System.out.print(t);
-    }
-
-    static boolean isEnd() {
-        for (int i = 2; i <= M; i++) {
-            if (sharks[i] != null) {
-                return true;
-            }
-        } return false;
     }
 
     static void removeSmell() {
@@ -140,9 +129,6 @@ public class Q19237 {
             this.num = num;
             this.time = time;
         }
-        public String toString() {
-            return num + "," + time;
-        }
     }
 
     static class Shark {
@@ -152,33 +138,6 @@ public class Q19237 {
             this.c = c;
             this.dir = dir;
             this.num = num;
-        }
-        public String toString() {
-            return r + ", " + c + ", " + dir + ", " + num;
-        }
-    }
-
-    static void printBoard() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.print(board[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
-    }
-
-    static void printSharks() {
-        for (int i = 1; i <= M; i++) {
-            System.out.println(sharks[i]);
-        } System.out.println();
-    }
-
-    static void printPriotiry() {
-        for (int i = 1; i <= M; i++) {
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
-                    System.out.print(priority[i][j][k] + " ");
-                } System.out.println();
-            } System.out.println();
         }
     }
 }
