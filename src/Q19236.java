@@ -25,27 +25,14 @@ public class Q19236 {
     }
 
     static void go(int r, int c, Fish[] fishes, int[][] nums, int sum) {
-        // 원본 복사
-        Fish[] tmpFishes = new Fish[17];
-        int[][] tmpNums = new int[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                tmpNums[i][j] = nums[i][j];
-                Fish f = fishes[i * 4 + j + 1];
-                if (f != null) {
-                    tmpFishes[i * 4 + j + 1] = new Fish(f.r, f.c, f.dir);
-                }
-            }
-        }
-
-        int target = tmpNums[r][c];
-        int dir = tmpFishes[target].dir;
+        int target = nums[r][c];
+        int dir = fishes[target].dir;
 
         // 상어가 해당 물고기를 먹음
-        tmpNums[r][c] = -1;
-        tmpFishes[target] = null;
-        move(tmpFishes, tmpNums);
-        tmpNums[r][c] = 0;
+        fishes[target] = null;
+        nums[r][c] = -1;
+        move(fishes, nums);
+        nums[r][c] = 0;
 
         boolean flag = false;
         while (true) {
@@ -54,9 +41,21 @@ public class Q19236 {
             if (nr < 0 || nc < 0 || nr >= 4 || nc >= 4) {
                 break;
             }
-            if (tmpNums[nr][nc] != 0) {
-                flag = true;
+            if (nums[nr][nc] != 0) {
+                // 복사본 생성
+                Fish[] tmpFishes = new Fish[17];
+                int[][] tmpNums = new int[4][4];
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        tmpNums[i][j] = nums[i][j];
+                        Fish f = fishes[i * 4 + j + 1];
+                        if (f != null) {
+                            tmpFishes[i * 4 + j + 1] = new Fish(f.r, f.c, f.dir);
+                        }
+                    }
+                }
                 go(nr, nc, tmpFishes, tmpNums, sum + tmpNums[nr][nc]);
+                flag = true;
             }
             r = nr;
             c = nc;
