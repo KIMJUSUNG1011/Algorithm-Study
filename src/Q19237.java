@@ -32,14 +32,105 @@ public class Q19237 {
             for (int j = 0; j < 4; j++) {
                 st = new StringTokenizer(br.readLine(), " ");
                 for (int k = 0; k < 4; k++) {
-                    priority[i][j][k] = Integer.parseInt(st.nextToken());
+                    priority[i][j][k] = Integer.parseInt(st.nextToken()) - 1;
                 }
             }
         }
 
         int t = 0;
-        while (true) {
+        while (t <= 1000 && isEnd()) {
+
+            // 상어가 자신의 냄새를 남김
+            for (int i = 1; i <= M; i++) {
+                Shark shark = sharks[i];
+                if (shark != null) {
+                    board[shark.r][shark.c] = new Board(shark.num, K);
+                }
+            }
+
+            boolean[][] visited = new boolean[N][N];
+            for (int i = 1; i <= M; i++) {
+                Shark shark = sharks[i];
+                if (shark == null) {
+                    continue;
+                }
+                int r = shark.r;
+                int c = shark.c;
+                int dir = shark.dir;
+                int num = shark.num;
+
+                boolean flag = false;
+                int mySmellDir = -1;
+                for (int j = 0; j < 4; j++) {
+                    int p = priority[num][dir][j];
+                    int nr = r + delta[p][0];
+                    int nc = c + delta[p][1];
+                    if (nr < 0 || nc < 0 || nr >= N || nc >= N) {
+                        continue;
+                    }
+                    if (board[nr][nc] == null) {
+                        shark.r = nr;
+                        shark.c = nc;
+                        shark.dir = p;
+                        flag = true;
+                        break;
+                    } else {
+                        // 자신의 냄새가 있는 칸을 찾을 때도 우선순위를 적용시켜야함
+                        if (board[nr][nc].num == num && mySmellDir == -1) {
+                            mySmellDir = p;
+                        }
+                    }
+                }
+
+                // 인접한 빈칸이 없는 경우 자신의 냄새가 있는 칸으로 이동
+                if (!flag) {
+                    if (mySmellDir == -1) {
+                        System.out.println("num : " + num);
+                        printSharks();
+                        printBoard();
+                    }
+                    shark.r = r + delta[mySmellDir][0];
+                    shark.c = c + delta[mySmellDir][1];
+                    shark.dir = mySmellDir;
+                }
+
+                // 코드상에서 번호가 작은 순으로 이동을 진행하므로
+                // 이동한 칸에 이미 다른 상어가 있는 경우 스스로를 삭제
+                if (visited[shark.r][shark.c]) {
+                    sharks[i] = null;
+                } else {
+                    visited[shark.r][shark.c] = true;
+                }
+            }
+            // 시간이 다 된 냄새를 제거함
+            removeSmell();
             t++;
+        }
+
+        if (t > 1000) {
+            t = -1;
+        }
+        System.out.print(t);
+    }
+
+    static boolean isEnd() {
+        for (int i = 2; i <= M; i++) {
+            if (sharks[i] != null) {
+                return true;
+            }
+        } return false;
+    }
+
+    static void removeSmell() {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (board[i][j] != null) {
+                    board[i][j].time--;
+                    if (board[i][j].time == 0) {
+                        board[i][j] = null;
+                    }
+                }
+            }
         }
     }
 
@@ -50,7 +141,7 @@ public class Q19237 {
             this.time = time;
         }
         public String toString() {
-            return num + ", " + time;
+            return num + "," + time;
         }
     }
 
