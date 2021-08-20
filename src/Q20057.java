@@ -47,21 +47,25 @@ public class Q20057 {
         alpha = y;
 
         int[] p = {r, c};
-        p = move(p[0], p[1], (d + 3) % 4,0.01, y);
-        p = move(p[0], p[1], d, 0.07, y);
-        move(p[0], p[1], (d + 3) % 4, 0.02, y);
-        move(p[0], p[1], d, 0.1, y);
+        move(p, (d + 3) % 4,0.01, y);
+        move(p, d, 0.07, y);
+        move(p, (d + 3) % 4, 0.02, y);
+        p[0] += delta[(d + 1) % 4][0];
+        p[1] += delta[(d + 1) % 4][1];
+        move(p, d, 0.1, y);
 
         p[0] = r;
         p[1] = c;
-        p = move(p[0], p[1], (d + 1) % 4,0.01, y);
-        p = move(p[0], p[1], d, 0.07, y);
-        move(p[0], p[1], (d + 1) % 4, 0.02, y);
-        move(p[0], p[1], d, 0.1, y);
+        move(p, (d + 1) % 4,0.01, y);
+        move(p, d, 0.07, y);
+        move(p, (d + 1) % 4, 0.02, y);
+        p[0] += delta[(d + 3) % 4][0];
+        p[1] += delta[(d + 3) % 4][1];
+        move(p, d, 0.1, y);
 
         nr += delta[d][0];
         nc += delta[d][1];
-        move(nr, nc, d, 0.05, y);
+        move(new int[]{nr, nc}, d, 0.05, y);
 
         if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
             map[nr][nc] += alpha;
@@ -70,9 +74,9 @@ public class Q20057 {
         }
     }
 
-    static int[] move(int r, int c, int dir, double rate, int y) {
-        int nr = r + delta[dir][0];
-        int nc = c + delta[dir][1];
+    static void move(int[] p, int dir, double rate, int y) {
+        int nr = p[0] + delta[dir][0];
+        int nc = p[1] + delta[dir][1];
         int value = (int)(y * rate);
         alpha -= value;
 
@@ -81,6 +85,8 @@ public class Q20057 {
         } else {
             answer += value;
         }
-        return new int[]{nr, nc};
+
+        p[0] = nr;
+        p[1] = nc;
     }
 }
