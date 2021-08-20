@@ -33,8 +33,6 @@ public class Q20057 {
             // 토네이도 시전
             tornado(r, c, dir);
 
-            printMap();
-
             r += delta[dir][0];
             c += delta[dir][1];
         }
@@ -75,21 +73,14 @@ public class Q20057 {
     static int[] move(int r, int c, int dir, double rate, int y) {
         int nr = r + delta[dir][0];
         int nc = c + delta[dir][1];
-        alpha -= y * rate;
+        int value = (int)(y * rate);
+        alpha -= value;
 
         if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
-            map[nc][nc] += y * rate;
+            map[nr][nc] += value;
         } else {
-            answer += y * rate;
+            answer += value;
         }
         return new int[]{nr, nc};
-    }
-
-    static void printMap() {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.printf("%3d", map[i][j]);
-            } System.out.println();
-        } System.out.println();
     }
 }
