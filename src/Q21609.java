@@ -45,8 +45,8 @@ public class Q21609 {
     static boolean find() {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
+                // board[i][j] 가 기준 블록인 경우만 탐색
                 if (board[i][j] != -1 && board[i][j] != 0 && board[i][j] != -100 && !visited[i][j]) {
-                    // board[i][j] 가 기준 블록인 경우만 탐색
                     findBlock(i, j);
                 }
             }
