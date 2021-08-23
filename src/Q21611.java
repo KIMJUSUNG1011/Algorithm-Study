@@ -75,6 +75,12 @@ public class Q21611 {
             int nr = r + delta2[f][0];
             int nc = c + delta2[f][1];
 
+            if (board[r][c] == 0) {
+                r = nr;
+                c = nc;
+                continue;
+            }
+
             if (nc != -1 && (board[r][c] == board[nr][nc])) {
                 cnt++;
             } else {
@@ -92,6 +98,7 @@ public class Q21611 {
                 }
                 cnt = 1;
             }
+
             r = nr;
             c = nc;
         }
@@ -102,6 +109,14 @@ public class Q21611 {
     static void move() {
         int r = (N / 2) + 1, c = (N / 2) - 1;
         while (c != -1) {
+
+            int f = front[r][c];
+            if (board[r][c] == 0) {
+                r += delta2[f][0];
+                c += delta2[f][1];
+                continue;
+            }
+
             // 구슬을 빈칸으로 이동
             int tmpR = r, tmpC = c;
             while (true) {
@@ -118,7 +133,6 @@ public class Q21611 {
                 }
             }
 
-            int f = front[r][c];
             r += delta2[f][0];
             c += delta2[f][1];
         }
@@ -154,13 +168,5 @@ public class Q21611 {
             c = nc;
         }
         board = tmp;
-    }
-
-    static void print(int[][] arr) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.print(arr[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
