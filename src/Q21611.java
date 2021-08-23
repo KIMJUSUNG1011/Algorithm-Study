@@ -170,3 +170,4 @@ public class Q21611 {
         board = tmp;
     }
 }
+
