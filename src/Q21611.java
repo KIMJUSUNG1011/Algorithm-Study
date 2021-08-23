@@ -35,6 +35,7 @@ public class Q21611 {
         System.out.print(score[0] + score[1] * 2 + score[2] * 3);
     }
 
+    // 각 칸들의 전, 후 이동 방향을 미리 저장
     static void init() {
         boolean[][] visited = new boolean[N][N];
         visited[N / 2][N / 2] = true;
@@ -67,26 +68,25 @@ public class Q21611 {
     }
 
     static boolean explosion() {
-        boolean endFlag = true;
+        boolean isEnd = true;
         int r = N / 2, c = (N / 2) - 1;
         int cnt = 1;
         while (c != -1) {
+            int or = r, oc = c;
             int f = front[r][c];
-            int nr = r + delta2[f][0];
-            int nc = c + delta2[f][1];
+            r += delta2[f][0];
+            c += delta2[f][1];
 
-            if (board[r][c] == 0) {
-                r = nr;
-                c = nc;
+            if (board[or][oc] == 0) {
                 continue;
             }
 
-            if (nc != -1 && (board[r][c] == board[nr][nc])) {
+            if (c != -1 && (board[or][oc] == board[r][c])) {
                 cnt++;
             } else {
-                if (cnt >= 4 && board[r][c] != 0) {
-                    endFlag = false;
-                    int tmpR = r, tmpC = c;
+                if (cnt >= 4) {
+                    isEnd = false;
+                    int tmpR = or, tmpC = oc;
                     while (cnt-- > 0) {
                         int num = board[tmpR][tmpC];
                         score[num - 1]++;
@@ -98,27 +98,25 @@ public class Q21611 {
                 }
                 cnt = 1;
             }
-
-            r = nr;
-            c = nc;
         }
         move();
-        return endFlag;
+        return isEnd;
     }
 
     static void move() {
         int r = (N / 2) + 1, c = (N / 2) - 1;
         while (c != -1) {
-
+            int or = r, oc = c;
             int f = front[r][c];
-            if (board[r][c] == 0) {
-                r += delta2[f][0];
-                c += delta2[f][1];
+            r += delta2[f][0];
+            c += delta2[f][1];
+
+            if (board[or][oc] == 0) {
                 continue;
             }
 
             // 구슬을 빈칸으로 이동
-            int tmpR = r, tmpC = c;
+            int tmpR = or, tmpC = oc;
             while (true) {
                 int b = back[tmpR][tmpC];
                 int br = tmpR + delta2[b][0];
@@ -132,9 +130,6 @@ public class Q21611 {
                     break;
                 }
             }
-
-            r += delta2[f][0];
-            c += delta2[f][1];
         }
     }
 
@@ -144,30 +139,28 @@ public class Q21611 {
         int tr = N / 2, tc = (N / 2) - 1;
         int cnt = 1;
         while (c != -1) {
+            int or = r, oc = c;
             int f = front[r][c];
-            int nr = r + delta2[f][0];
-            int nc = c + delta2[f][1];
+            r += delta2[f][0];
+            c += delta2[f][1];
 
-            if (nc != -1 && (board[r][c] == board[nr][nc])) {
+            if (c != -1 && (board[or][oc] == board[r][c])) {
                 cnt++;
             } else {
-                if (board[r][c] != 0 && tc != -1) {
+                if (board[or][oc] != 0 && tc != -1) {
                     tmp[tr][tc] = cnt;
                     f = front[tr][tc];
                     tr += delta2[f][0];
                     tc += delta2[f][1];
 
-                    tmp[tr][tc] = board[r][c];
+                    tmp[tr][tc] = board[or][oc];
                     f = front[tr][tc];
                     tr += delta2[f][0];
                     tc += delta2[f][1];
                 }
                 cnt = 1;
             }
-            r = nr;
-            c = nc;
         }
         board = tmp;
     }
 }
-
