@@ -5,7 +5,6 @@ public class Q21610 {
     static int N, M;
     static int[][] board = new int[50][50];
     static int[][] added = new int[50][50];
-    static ArrayList<int[]> clouds = new ArrayList<>();
     static int[][] delta = {
             {0, -1}, {-1, -1}, {-1, 0}, {-1, 1},
             {0, 1}, {1, 1}, {1, 0}, {1, -1}
@@ -23,21 +22,27 @@ public class Q21610 {
             }
         }
 
+        int[][] clouds = new int[N * N][2];
+        int idx = 0;
         for (int i = N - 2; i < N; i++) {
             for (int j = 0; j < 2; j++) {
-                clouds.add(new int[]{i, j});
+                clouds[idx][0] = i;
+                clouds[idx][1] = j;
+                idx++;
             }
         }
 
+        int nClouds = idx;
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             int d = Integer.parseInt(st.nextToken()) - 1;
             int s = Integer.parseInt(st.nextToken());
 
             boolean[][] check = new boolean[N][N];
-            for (int j = 0; j < clouds.size(); j++) {
-                int r = clouds.get(j)[0];
-                int c = clouds.get(j)[1];
+            for (int j = 0; j < nClouds; j++) {
+                int r = clouds[j][0];
+                int c = clouds[j][1];
+
                 for (int k = 0; k < s; k++) {
                     r += delta[d][0];
                     c += delta[d][1];
@@ -55,13 +60,14 @@ public class Q21610 {
                         c = 0;
                     }
                 }
-                clouds.set(j, new int[]{r, c});
+                clouds[j][0] = r;
+                clouds[j][1] = c;
                 board[r][c]++;
             }
 
-            for (int j = 0; j < clouds.size(); j++) {
-                int r = clouds.get(j)[0];
-                int c = clouds.get(j)[1];
+            for (int j = 0; j < nClouds; j++) {
+                int r = clouds[j][0];
+                int c = clouds[j][1];
 
                 int cnt = 0;
                 for (int k = 1; k < 8; k += 2) {
@@ -84,15 +90,19 @@ public class Q21610 {
                 }
             }
 
-            clouds.clear();
+            clouds = new int[N * N][2];
+            idx = 0;
             for (int j = 0; j < N; j++) {
                 for (int k = 0; k < N; k++) {
                     if (board[j][k] >= 2 && !check[j][k]) {
                         board[j][k] -= 2;
-                        clouds.add(new int[]{j, k});
+                        clouds[idx][0] = j;
+                        clouds[idx][1] = k;
+                        idx++;
                     }
                 }
             }
+            nClouds = idx;
         }
 
         int answer = 0;
