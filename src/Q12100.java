@@ -13,6 +13,7 @@ public class Q12100 {
             StringTokenizer st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < N; j++) {
                 board[i][j] = Integer.parseInt(st.nextToken());
+                answer = Math.max(answer, board[i][j]);
             }
         }
 
@@ -35,27 +36,12 @@ public class Q12100 {
         combine(board);
         move(board);
 
-        int max = getMax(board);
-        answer = Math.max(answer, max);
-
         // 같은 방향으로 여러번 이동시키는 경우도 가능함
         for (int i = 0; i < 4; i++) {
             int[][] tmp = new int[N][N];
             rotate(tmp, board, i);
             go(tmp, index + 1);
         }
-    }
-
-    static int getMax(int[][] arr) {
-        int max = -1;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (arr[i][j] != 0) {
-                    max = Math.max(max, arr[i][j]);
-                }
-            }
-        }
-        return max;
     }
 
     // 시계방향으로 d 만큼 회전한 값을 복사
@@ -90,7 +76,8 @@ public class Q12100 {
                     continue;
                 }
                 if (arr[or][c] == arr[tr][c]) {
-                    arr[or][c] *= 2;
+                    // 최대값 갱신
+                    answer = Math.max(answer, arr[or][c] *= 2);
                     arr[tr][c] = 0;
                     or = tr + 1;
                     tr = or + 1;
