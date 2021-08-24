@@ -4,7 +4,6 @@ import java.util.*;
 public class Q21610 {
     static int N, M;
     static int[][] board = new int[50][50];
-    static int[][] added = new int[50][50];
     static int[][] delta = {
             {0, -1}, {-1, -1}, {-1, 0}, {-1, 1},
             {0, 1}, {1, 1}, {1, 0}, {1, -1}
@@ -77,17 +76,10 @@ public class Q21610 {
                         cnt++;
                     }
                 }
-                check[r][c] = true;
-                added[r][c] += cnt;
-            }
-
-            for (int j = 0; j < N; j++) {
-                for (int k = 0; k < N; k++) {
-                    if (added[j][k] > 0) {
-                        board[j][k] += added[j][k];
-                        added[j][k] = 0;
-                    }
+                if (cnt > 0) {
+                    board[r][c] += cnt;
                 }
+                check[r][c] = true;
             }
 
             clouds = new int[N * N][2];
