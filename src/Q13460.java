@@ -4,6 +4,7 @@ import java.util.*;
 public class Q13460 {
     static int N, M;
     static char[][] board = new char[10][10];
+    static boolean[][][][] visited = new boolean[10][10][10][10];
     static int[][] delta = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
     static int min = Integer.MAX_VALUE;
 
@@ -34,9 +35,7 @@ public class Q13460 {
         }
 
         for (int i = 0; i < 4; i++) {
-            int[] tmpR = {r[0], r[1]};
-            int[] tmpB = {b[0], b[1]};
-            go(tmpR, tmpB, i, 0);
+            go(new int[]{r[0], r[1]}, new int[]{b[0], b[1]}, i, 0);
         }
 
         if (min == Integer.MAX_VALUE) {
@@ -52,6 +51,15 @@ public class Q13460 {
         if (index == 10) {
             return;
         }
+
+        // 이전에 같은 구슬 배치가 있었을 경우 중복 수행 방지
+        if (visited[r[0]][r[1]][b[0]][b[1]]) {
+            return;
+        }
+
+        // 이동하기 전 구슬 좌표 저장
+        int orr = r[0], orc = r[1];
+        int obr = b[0], obc = b[1];
 
         // 어떤 구슬을 먼저 굴릴지 우선순위를 결정
         if (prior(r, b, d)) {
@@ -74,20 +82,25 @@ public class Q13460 {
         }
 
         for (int i = 0; i < 4; i++) {
-            int[] tmpR = {r[0], r[1]};
-            int[] tmpB = {b[0], b[1]};
-            go(tmpR, tmpB, i, index + 1);
+            // 같은 방향으로 계속해서 굴리는 것을 방지
+            if (d != i) {
+                visited[orr][orc][obr][obc] = true;
+                go(new int[]{r[0], r[1]}, new int[]{b[0], b[1]}, i, index + 1);
+                visited[orr][orc][obr][obc] = false;
+            }
         }
     }
 
     // 빨간 구슬과 파란 구슬 중 먼저 굴려야하는 구슬을 결정
     static boolean prior(int[] r, int[] b, int d) {
-        switch (d) {
-            case 0 : return r[0] < b[0];
-            case 1 : return r[1] < b[1];
-            case 2 : return r[0] > b[0];
-            case 3 : return r[1] > b[1];
-            default : return false;
+        if (d == 0) {
+            return r[0] < b[0];
+        } else if (d == 1) {
+            return r[1] < b[1];
+        } else if (d == 2) {
+            return r[0] > b[0];
+        } else {
+            return r[1] > b[1];
         }
     }
 
@@ -98,6 +111,7 @@ public class Q13460 {
         while (true) {
             int nr = r + delta[d][0];
             int nc = c + delta[d][1];
+
             // 벽 또는 다른 구슬을 만난 경우
             if (board[nr][nc] == '#' || (nr == other[0] && nc == other[1])) {
                 break;
