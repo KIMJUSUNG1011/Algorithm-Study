@@ -21,9 +21,7 @@ public class Q14500 {
         }
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                visited[i][j] = true;
                 dfs(i, j, 0, 0);
-                visited[i][j] = false;
             }
         }
 
@@ -55,31 +53,33 @@ public class Q14500 {
                 continue;
             }
             if (!visited[nr][nc]) {
-                visited[nr][nc] = true;
+                visited[r][c] = true;
                 dfs(nr, nc, sum + board[r][c], index + 1);
-                visited[nr][nc] = false;
+                visited[r][c] = false;
             }
         }
     }
 
     static void except(int r, int c) {
         int sum = board[r][c];
+        int cnt = 4;
+        int min = Integer.MAX_VALUE;
         for (int i = 0; i < 4; i++) {
             int nr = r + delta[i][0];
             int nc = c + delta[i][1];
-            if (nr >= 0 && nc >= 0 && nr < N && nc < M) {
-                sum += board[nr][nc];
+            if (nr < 0 || nc < 0 || nr >= N || nc >= M) {
+                cnt--;
+                continue;
             }
+            min = Math.min(min, board[nr][nc]);
+            sum += board[nr][nc];
         }
 
-        if (r == 0 || r == N - 1 || c == 0 || c == M - 1) {
-            max = Math.max(max, sum);
-        } else {
-            for (int i = 0; i < 4; i++) {
-                int nr = r + delta[i][0];
-                int nc = c + delta[i][1];
-                max = Math.max(max, sum - board[nr][nc]);
-            }
+        // 날개 중 가장 작은 것을 제외
+        if (cnt == 4) {
+            sum -= min;
         }
+
+        max = Math.max(max, sum);
     }
 }
