@@ -27,35 +27,14 @@ public class Q15683 {
             }
         }
 
-        if (nCCTV == 0) {
-            int nBlind = 0;
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    if (map[i][j] == 0) {
-                        nBlind++;
-                    }
-                }
-            }
-            System.out.print(nBlind);
-            return;
-        }
-
-        for (int i = 0; i < 4; i++) {
-            int[][] tmp = new int[N][M];
-            copy(tmp, map);
-            go(0, i, tmp);
-        }
-
+        go(-1, -1, map);
         System.out.print(min);
     }
 
     static void go(int index, int dir, int[][] map) {
 
-        int[] p = cctv[index];
-        shoot(p[0], p[1], dir, map);
-
         // 종료 조건
-        if (index >= nCCTV - 1) {
+        if (index == nCCTV) {
             int nBlind = 0;
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < M; j++) {
@@ -66,6 +45,11 @@ public class Q15683 {
             }
             min = Math.min(min, nBlind);
             return;
+        }
+
+        if (index != -1) {
+            int[] p = cctv[index];
+            shoot(p[0], p[1], dir, map);
         }
 
         for (int i = 0; i < 4; i++) {
@@ -91,7 +75,7 @@ public class Q15683 {
             dirs[3] = (dir + 3) % 4;
         }
 
-        // 감시받는 영역 체크
+        // 감시받는 영역 표시
         for (int i = 0; i < 4; i++) {
             int tr = r, tc = c;
             int d = dirs[i];
