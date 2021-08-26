@@ -17,8 +17,7 @@ public class Q14888 {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        ops[0] = 1;
-        int idx = 1;
+        int idx = 0;
         st = new StringTokenizer(br.readLine(), " ");
         for (int i = 0; i < 4; i++) {
             int num = Integer.parseInt(st.nextToken());
@@ -27,8 +26,12 @@ public class Q14888 {
             }
         }
 
-        visited[0] = true;
-        go(0, 0, 0);
+        for (int i = 0; i < N - 1; i++) {
+            visited[i] = true;
+            go(1, arr[0], i);
+            visited[i] = false;
+        }
+
         System.out.print(max + "\n" + min);
     }
 
@@ -44,7 +47,7 @@ public class Q14888 {
             return;
         }
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < N - 1; i++) {
             if (!visited[i]) {
                 visited[i] = true;
                 go(index + 1, res, i);
@@ -55,11 +58,11 @@ public class Q14888 {
 
     static int operate(int op, int num1, int num2) {
         if (op == 1) {
-           return num2 + num1;
+            return num2 + num1;
         } else if (op == 2) {
             return num2 - num1;
         } else if (op == 3) {
-           return num2 * num1;
+            return num2 * num1;
         } else {
             return num2 / num1;
         }
