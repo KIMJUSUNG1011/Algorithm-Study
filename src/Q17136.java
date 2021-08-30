@@ -35,12 +35,15 @@ public class Q17136 {
             return;
         }
 
+        if (cnt >= min) {
+            return;
+        }
+
         int r = pairs.get(index)[0];
         int c = pairs.get(index)[1];
 
         if (check[r][c]) {
-            boolean[][] tmp = copy(check);
-            go(index + 1, tmp, cnt);
+            go(index + 1, check, cnt);
             return;
         }
 
@@ -69,7 +72,7 @@ public class Q17136 {
             // 색종이가 덮는 부분이 모두 1 인지
             // 다른 색종이에 의해 덮여있는지 체크
             if (!flag) {
-                continue;
+                break;
             }
 
             paperCnt[i]--;
