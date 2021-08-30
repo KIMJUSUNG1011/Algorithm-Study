@@ -58,21 +58,17 @@ public class Q17136 {
             }
 
             boolean[][] tmp = copy(check);
-            boolean flag = true;
             for (int j = 0; j < i + 1; j++) {
                 for (int k = 0; k < i + 1; k++) {
                     int nr = r + j, nc = c + k;
+                    // 색종이가 덮는 부분이 모두 1 인지
+                    // 다른 색종이에 의해 덮여있는지 체크
+                    // 해당 색종이를 붙일 수 없다면 더 큰 색종이는 탐색할 필요없음
                     if (map[nr][nc] != 1 || check[nr][nc]) {
-                        flag = false;
-                        break;
+                        return;
                     }
                     tmp[nr][nc] = true;
                 }
-            }
-            // 색종이가 덮는 부분이 모두 1 인지
-            // 다른 색종이에 의해 덮여있는지 체크
-            if (!flag) {
-                break;
             }
 
             paperCnt[i]--;
