@@ -5,8 +5,8 @@ public class Q17281 {
     static int N;
     static int[][] result = new int[50][9];
     static int[] player = {1, 2, 3, 4, 5, 6, 7, 8};
-    static int[] order = new int[9];
     static boolean[] check = new boolean[8];
+    static int[] order = new int[9];
     static int max = Integer.MIN_VALUE;
 
     public static void main(String[] args) throws IOException {
@@ -56,21 +56,20 @@ public class Q17281 {
                 int hit = result[inning][order[idx]];
                 if (hit == 0) {
                     out++;
-                    idx = (idx + 1) % 9;
-                    continue;
-                }
-                base[0] = 1;
-                for (int i = 3; i >= 0; i--) {
-                    if (base[i] == 0) {
-                        continue;
+                } else {
+                    base[0] = 1;
+                    for (int i = 3; i >= 0; i--) {
+                        if (base[i] == 0) {
+                            continue;
+                        }
+                        int ni = i + hit;
+                        if (ni > 3) {
+                            score++;
+                        } else {
+                            base[ni] = 1;
+                        }
+                        base[i] = 0;
                     }
-                    int ni = i + hit;
-                    if (ni > 3) {
-                        score++;
-                    } else {
-                        base[ni] = 1;
-                    }
-                    base[i] = 0;
                 }
                 idx = (idx + 1) % 9;
             }
