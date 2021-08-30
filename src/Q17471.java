@@ -5,7 +5,6 @@ public class Q17471 {
     static int N;
     static int[] map = new int[11];
     static boolean[] check = new boolean[11];
-    static boolean[][] pair = new boolean[11][11];
     static int nA = 0;
     static int min = Integer.MAX_VALUE;
     static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
@@ -28,10 +27,7 @@ public class Q17471 {
             for (int j = 0; j < m; j++) {
                 int num = Integer.parseInt(st.nextToken());
                 graph.get(i).add(num);
-                pair[i][num] = true;
-                pair[num][i] = true;
             }
-            pair[i][i] = true;
         }
 
         nA = N / 2;
@@ -50,17 +46,7 @@ public class Q17471 {
     static void go(int index, int cnt) {
 
         if (cnt == nA) {
-            if (isConnect()) {
-                int sA = 0, sB = 0;
-                for (int i = 1; i <= N; i++) {
-                    if (check[i]) {
-                        sA += map[i];
-                    } else {
-                        sB += map[i];
-                    }
-                }
-                min = Math.min(min, Math.abs(sA - sB));
-            }
+            process();
             return;
         }
 
@@ -74,8 +60,42 @@ public class Q17471 {
         go(index + 1, cnt);
     }
 
-    // A, B 팀이 각각 팀 끼리 연결되어 있는지 체크
-    static boolean isConnect() {
-        return true;
+    static void process() {
+        int sA = 0, sB = 0, cA = 0, cB = 0, a = 0, b = 0;
+        for (int i = 1; i <= N; i++) {
+            if (check[i]) {
+                sA += map[i];
+                cA++;
+                if (a == 0) { a = i; }
+            } else {
+                sB += map[i];
+                cB++;
+                if (b == 0) { b = i; }
+            }
+        }
+
+        if (isConnect(a, cA) && isConnect(b, cB)) {
+            min = Math.min(min, Math.abs(sA - sB));
+        }
+    }
+
+    // 팀 끼리 연결되어 있는지 체크
+    static boolean isConnect(int start, int size) {
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[N + 1];
+        q.add(start);
+        visited[start] = true;
+        while (!q.isEmpty()) {
+            int p = q.poll();
+            size--;
+            ArrayList<Integer> list = graph.get(p);
+            for (int x : list) {
+                if (!visited[x] && (check[x] == check[p])) {
+                    q.add(x);
+                    visited[x] = true;
+                }
+            }
+        }
+        return (size == 0);
     }
 }
