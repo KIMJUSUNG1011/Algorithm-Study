@@ -2,12 +2,9 @@ import java.io.*;
 import java.util.*;
 
 public class Q3954 {
-    static int t, sm, sc, si, mPointer, cPointer, iPointer;
-    static int[] memory;
-    static char[] code;
-    static char[] input;
-    static int[] pair;
-    static boolean[] loop;
+    static int t, sm, sc, si, mPointer, cPointer, iPointer, min, max;
+    static int[] memory, pair;
+    static char[] code, input;
     static Stack<Paren> stack;
     static StringBuilder answer = new StringBuilder();
 
@@ -23,7 +20,6 @@ public class Q3954 {
             code = new char[sc];
             input = new char[si];
             pair = new int[sc];
-            loop = new boolean[sc];
 
             stack = new Stack<>();
             String line = br.readLine();
@@ -43,10 +39,8 @@ public class Q3954 {
             if (execute()) {
                 answer.append("Terminates").append("\n");
             } else {
-                // int start = Math.min(cPointer, pair[cPointer]);
-                // int end = Math.max(cPointer, pair[cPointer]);
                 answer.append("Loops").append(" ");
-                answer.append(start).append(" ").append(end).append("\n");
+                answer.append(min - 1).append(" ").append(max).append("\n");
             }
         }
 
@@ -68,13 +62,15 @@ public class Q3954 {
         }
     }
 
-    static int start, end;
     static boolean execute() {
         mPointer = 0;
         cPointer = 0;
         iPointer = 0;
         int cnt = 0;
-        while (cPointer < sc && cnt++ < 50000000) {
+        min = Integer.MAX_VALUE;
+        max = Integer.MIN_VALUE;
+
+        while (cPointer < sc) {
             if (code[cPointer] == '-') {
                 memory[mPointer] = (memory[mPointer] + 255) % 256;
             } else if (code[cPointer] == '+') {
@@ -85,23 +81,11 @@ public class Q3954 {
                 mPointer = (mPointer + 1) % sm;
             } else if (code[cPointer] == '[') {
                 if (memory[mPointer] == 0) {
-                    if (loop[cPointer]) {
-                        start = cPointer;
-                    }
-                    loop[cPointer] = true;
-                    loop[pair[cPointer]] = true;
-                    cPointer = pair[cPointer] + 1;
-                    continue;
+                    cPointer = pair[cPointer];
                 }
             } else if (code[cPointer] == ']') {
                 if (memory[mPointer] != 0) {
-                    if (loop[cPointer]) {
-                        end = cPointer;
-                    }
-                    loop[cPointer] = true;
-                    loop[pair[cPointer]] = true;
-                    cPointer = pair[cPointer] + 1;
-                    continue;
+                    cPointer = pair[cPointer];
                 }
             } else if (code[cPointer] == ',') {
                 if (iPointer == si) {
@@ -112,6 +96,14 @@ public class Q3954 {
                 }
             }
             cPointer++;
+            cnt++;
+            if (cnt > 50000000) {
+                min = Math.min(min, cPointer);
+                max = Math.max(max, cPointer);
+            }
+            if (cnt > 100000000) {
+                break;
+            }
         }
 
         return (cnt <= 50000000);
