@@ -66,10 +66,10 @@ public class Q3954 {
         mPointer = 0;
         cPointer = 0;
         iPointer = 0;
-        int cnt = 0;
         min = Integer.MAX_VALUE;
         max = Integer.MIN_VALUE;
 
+        int cnt = 0;
         while (cPointer < sc) {
             if (code[cPointer] == '-') {
                 memory[mPointer] = (memory[mPointer] + 255) % 256;
@@ -79,14 +79,10 @@ public class Q3954 {
                 mPointer = (mPointer + sm - 1) % sm;
             } else if (code[cPointer] == '>') {
                 mPointer = (mPointer + 1) % sm;
-            } else if (code[cPointer] == '[') {
-                if (memory[mPointer] == 0) {
-                    cPointer = pair[cPointer];
-                }
-            } else if (code[cPointer] == ']') {
-                if (memory[mPointer] != 0) {
-                    cPointer = pair[cPointer];
-                }
+            } else if (code[cPointer] == '[' && memory[mPointer] == 0) {
+                cPointer = pair[cPointer];
+            } else if (code[cPointer] == ']' && memory[mPointer] != 0) {
+                cPointer = pair[cPointer];
             } else if (code[cPointer] == ',') {
                 if (iPointer == si) {
                     memory[mPointer] = 255;
@@ -97,6 +93,10 @@ public class Q3954 {
             }
             cPointer++;
             cnt++;
+
+            // 최악의 경우 5천만번의 명령을 수행해야 한 번의 루프가 나오는 경우도 있음
+            // 따라서 5천만번의 수행으로는 어떤 루프가 무한루프인지 확정지을 수 없으므로
+            // 5천만번 ~ 1억번을 돌려서 가장 큰 루프를 구해야함
             if (cnt > 50000000) {
                 min = Math.min(min, cPointer);
                 max = Math.max(max, cPointer);
