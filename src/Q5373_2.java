@@ -33,18 +33,63 @@ public class Q5373_2 {
 
     static void rotate(char face, char dir) {
         int faceNum = faces.indexOf(face);
-        char[][] tmp = new char[3][3];
+        char[][] tmp_cube = new char[3][3];
+        char[] tmp = new char[3];
         if (dir == '+') {
             // 해당 면을 시계방향으로 회전하여 임시 배열에 저장
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2; j++) {
-                    tmp[j][2 - i] = cube[faceNum][i][j];
+                    tmp_cube[j][2 - i] = cube[faceNum][i][j];
                 }
             }
             // 하드코딩
             switch (face) {
                 case 'U' :
+                    tmp[0] = cube[3][0][2];
+                    tmp[1] = cube[3][0][1];
+                    tmp[2] = cube[3][0][0];
+
+                    cube[3][0][2] = cube[4][0][2];
+                    cube[3][0][1] = cube[4][0][1];
+                    cube[3][0][0] = cube[4][0][0];
+
+                    cube[4][0][2] = cube[2][0][2];
+                    cube[4][0][1] = cube[2][0][1];
+                    cube[4][0][0] = cube[2][0][0];
+
+                    cube[2][0][2] = cube[5][0][2];
+                    cube[2][0][1] = cube[5][0][1];
+                    cube[2][0][0] = cube[5][0][0];
+
+                    cube[5][0][2] = tmp[0];
+                    cube[5][0][1] = tmp[1];
+                    cube[5][0][0] = tmp[2];
+
+                    break;
+
                 case 'D' :
+                    tmp[0] = cube[2][2][0];
+                    tmp[1] = cube[2][2][1];
+                    tmp[2] = cube[2][2][2];
+
+                    cube[2][2][0] = cube[4][2][0];
+                    cube[2][2][1] = cube[4][2][1];
+                    cube[2][2][2] = cube[4][2][2];
+
+                    cube[4][2][0] = cube[3][2][0];
+                    cube[4][2][1] = cube[3][2][1];
+                    cube[4][2][2] = cube[3][2][2];
+
+                    cube[3][2][0] = cube[5][2][0];
+                    cube[3][2][1] = cube[5][2][1];
+                    cube[3][2][2] = cube[5][2][2];
+
+                    cube[5][2][0] = tmp[0];
+                    cube[5][2][1] = tmp[1];
+                    cube[5][2][2] = tmp[2];
+
+                    break;
+
                 case 'F' :
                 case 'B' :
                 case 'L' :
@@ -54,13 +99,57 @@ public class Q5373_2 {
             // 해당 면을 반시계방향으로 회전하여 임시 배열에 저장
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2; j++) {
-                    tmp[2 - j][i] = cube[faceNum][i][j];
+                    tmp_cube[2 - j][i] = cube[faceNum][i][j];
                 }
             }
             // 하드코딩
             switch (face) {
                 case 'U' :
+                    tmp[0] = cube[3][0][2];
+                    tmp[1] = cube[3][0][1];
+                    tmp[2] = cube[3][0][0];
+
+                    cube[3][0][2] = cube[5][0][2];
+                    cube[3][0][1] = cube[5][0][1];
+                    cube[3][0][0] = cube[5][0][0];
+
+                    cube[5][0][2] = cube[2][0][2];
+                    cube[5][0][1] = cube[2][0][1];
+                    cube[5][0][0] = cube[2][0][0];
+
+                    cube[2][0][2] = cube[4][0][2];
+                    cube[2][0][1] = cube[4][0][1];
+                    cube[2][0][0] = cube[4][0][0];
+
+                    cube[4][0][2] = tmp[0];
+                    cube[4][0][1] = tmp[1];
+                    cube[4][0][0] = tmp[2];
+
+                    break;
+
                 case 'D' :
+                    tmp[0] = cube[2][2][0];
+                    tmp[1] = cube[2][2][1];
+                    tmp[2] = cube[2][2][2];
+
+                    cube[2][2][0] = cube[5][2][0];
+                    cube[2][2][1] = cube[5][2][1];
+                    cube[2][2][2] = cube[5][2][2];
+
+                    cube[5][2][0] = cube[3][2][0];
+                    cube[5][2][1] = cube[3][2][1];
+                    cube[5][2][2] = cube[3][2][2];
+
+                    cube[3][2][0] = cube[4][2][0];
+                    cube[3][2][1] = cube[4][2][1];
+                    cube[3][2][2] = cube[4][2][2];
+
+                    cube[4][2][0] = tmp[0];
+                    cube[4][2][1] = tmp[1];
+                    cube[4][2][2] = tmp[2];
+
+                    break;
+
                 case 'F' :
                 case 'B' :
                 case 'L' :
@@ -71,7 +160,7 @@ public class Q5373_2 {
         // 임시 배열을 원본에 복사
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                cube[faceNum][i][j] = tmp[i][j];
+                cube[faceNum][i][j] = tmp_cube[i][j];
             }
         }
     }
