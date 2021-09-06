@@ -151,6 +151,7 @@ public class Q5373_2 {
                     break;
 
                 case 'F' :
+
                 case 'B' :
                 case 'L' :
                 case 'R' :
