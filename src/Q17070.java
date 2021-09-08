@@ -4,7 +4,7 @@ import java.util.*;
 public class Q17070 {
     static int N;
     static int[][] map = new int[16][16];
-    static int answer = 0;
+    static int[][][] d = new int[16][16][3];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -16,37 +16,39 @@ public class Q17070 {
             }
         }
 
-        go(new Pipe(0, 0, 0, 1, 0));
-        System.out.print(answer);
+        System.out.print(go(new Pipe(0, 0, 0, 1, 0)));
     }
 
-    static void go(Pipe pipe) {
+    static int go(Pipe pipe) {
 
         int r1 = pipe.r1, c1 = pipe.c1;
         int r2 = pipe.r2, c2 = pipe.c2;
         int type = pipe.type;
 
         if (r2 == N - 1 && c2 == N - 1) {
-            answer++;
-            return;
+            return 1;
+        }
+
+        if (d[r1][c1][type] != 0) {
+            return d[r1][c1][type];
         }
 
         // 가로
         if (type == 0) {
-           if (check(r2, c2 + 1)) {
-               go(new Pipe(r1, c1 + 1, r2, c2 + 1, 0));
-               if (check(r2 + 1, c2) && check(r2 + 1, c2 + 1)) {
-                   go(new Pipe(r1, c1 + 1, r2 + 1, c2 + 1, 2));
-               }
-           }
+            if (check(r2, c2 + 1)) {
+                d[r1][c1][type] += go(new Pipe(r1, c1 + 1, r2, c2 + 1, 0));
+                if (check(r2 + 1, c2) && check(r2 + 1, c2 + 1)) {
+                    d[r1][c1][type] += go(new Pipe(r1, c1 + 1, r2 + 1, c2 + 1, 2));
+                }
+            }
         }
 
         // 세로
         if (type == 1) {
             if (check(r2 + 1, c2)) {
-                go(new Pipe(r1 + 1, c1, r2 + 1, c2, 1));
+                d[r1][c1][type] += go(new Pipe(r1 + 1, c1, r2 + 1, c2, 1));
                 if (check(r2, c2 + 1) && check(r2 + 1, c2 + 1)) {
-                    go(new Pipe(r1 + 1, c1, r2 + 1, c2 + 1, 2));
+                    d[r1][c1][type] += go(new Pipe(r1 + 1, c1, r2 + 1, c2 + 1, 2));
                 }
             }
         }
@@ -54,15 +56,17 @@ public class Q17070 {
         // 대각선
         if (type == 2) {
             if (check(r2, c2 + 1)) {
-                go(new Pipe(r1 + 1, c1 + 1, r2, c2 + 1, 0));
+                d[r1][c1][type] += go(new Pipe(r1 + 1, c1 + 1, r2, c2 + 1, 0));
             }
             if (check(r2 + 1, c2)) {
-                go(new Pipe(r1 + 1, c1 + 1, r2 + 1, c2, 1));
+                d[r1][c1][type] += go(new Pipe(r1 + 1, c1 + 1, r2 + 1, c2, 1));
             }
             if (check(r2, c2 + 1) && check(r2 + 1, c2) && check(r2 + 1, c2 + 1)) {
-                go(new Pipe(r1 + 1, c1 + 1, r2 + 1, c2 + 1, 2));
+                d[r1][c1][type] += go(new Pipe(r1 + 1, c1 + 1, r2 + 1, c2 + 1, 2));
             }
         }
+
+        return d[r1][c1][type];
     }
 
     static boolean check(int r, int c) {
