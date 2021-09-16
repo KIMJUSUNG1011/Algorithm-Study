@@ -2,3 +2,4 @@
 
 - union-find
 - gcd
+- 정답 범위 확인
