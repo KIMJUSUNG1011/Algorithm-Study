@@ -1,19 +1,19 @@
-import java.util.*;
-
 public class Test {
-    static StringBuilder sb = new StringBuilder();
-
     public static void main(String[] args) {
-        two(10);
+        StringBuilder sb = new StringBuilder();
+        convert(11, 3, sb);
+        System.out.println(sb);
+
+        sb = new StringBuilder();
+        convert(11, 2, sb);
         System.out.println(sb);
     }
-
-    static void two(int n) {
-        if (n == 1) {
+    static void convert(int n, int x, StringBuilder sb) {
+        if (n < x) {
             sb.append(n);
             return;
         }
-        two(n / 2);
-        sb.append(n % 2);
+        convert(n / x, x, sb);
+        sb.append(n % x);
     }
 }
