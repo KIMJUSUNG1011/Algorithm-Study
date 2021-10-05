@@ -31,7 +31,6 @@ public class Test {
         }
 
         go(0, 0);
-
         System.out.print(answer);
     }
 
@@ -52,6 +51,9 @@ public class Test {
                 if (nr < 0 || nc < 0 || nr >= N || nc >= M) {
                     continue;
                 }
+                if (map[nr][nc] == 0) {
+                    map[nr][nc] = -1;
+                }
                 if (map[nr][nc] == 2 && !visited[nr][nc]) {
                     q.add(new int[]{nr, nc});
                     visited[nr][nc] = true;
@@ -64,6 +66,13 @@ public class Test {
     static void go(int index, int cnt) {
 
         if (cnt == 2) {
+
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < M; j++) {
+                    System.out.print(map[i][j] + " ");
+                } System.out.println();
+            } System.out.println();
+
             answer = Math.max(answer, count());
             return;
         }
@@ -75,10 +84,10 @@ public class Test {
         int r = index / M;
         int c = index % M;
 
-        if (map[r][c] == 0) {
+        if (map[r][c] == -1) {
             map[r][c] = 1;
             go(index + 1, cnt + 1);
-            map[r][c] = 0;
+            map[r][c] = -1;
         }
 
         go(index + 1, cnt);
@@ -100,7 +109,7 @@ public class Test {
                             continue;
                         }
                         // 살아있는 그룹인 경우
-                        if (map[nr][nc] == 0) {
+                        if (map[nr][nc] == 0 || map[nr][nc] == -1) {
                             check[group[i][j]] = true;
                             break;
                         }
