@@ -9,4 +9,4 @@
 - 정렬함수 사용
 - 정답 범위 long인 경우
 - toLowerCase(), toUpperCase()
-- replaceAll(), toBinaryString()
+- replaceAll() -> 정규식, toBinaryString()
