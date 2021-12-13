@@ -11,5 +11,3 @@
 - toLowerCase(), toUpperCase()
 - replaceAll() -> 정규식, toBinaryString()
 - GCD, LCM
-
-
