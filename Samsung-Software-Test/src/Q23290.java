@@ -6,17 +6,16 @@ public class Q23290 {
     static int M, S;
     static int[][] delta = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}};
     static int[][] delta2 = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
-    static Fish shark = new Fish(-1, -1, -1);
-    static LinkedList<Fish> save = new LinkedList<>();
-    static int answer = 0;
 
-    // 물고기들을 관리
+    // 상어, 물고기들을 관리
+    static Fish shark = new Fish(-1, -1, -1);
+    static Queue<Fish> save = new LinkedList<>();
     static int[][] nFish = new int[4][4];
-    static LinkedList<Fish> fishes = new LinkedList<>();
+    static Queue<Fish> fishes = new LinkedList<>();
 
     // 물고기 냄새를 관리
     static int[][] nSmell = new int[4][4];
-    static LinkedList<Smell> smells = new LinkedList<>();
+    static Queue<Smell> smells = new LinkedList<>();
 
     // 상어의 이동 경로와 제외된 물고기 수 저장
     static List<Info> infos = new ArrayList<>();
@@ -44,78 +43,49 @@ public class Q23290 {
         for (int i = 0; i < S; i++) {
 
             // 모든 물고기 별도 저장
-            for (int j = 0; j < fishes.size(); j++) {
-                Fish f = fishes.get(j);
+            Iterator<Fish> it = fishes.iterator();
+            while (it.hasNext()) {
+                Fish f = it.next();
                 save.add(new Fish(f.r, f.c, f.dir));
             }
 
             // 모든 물고기들을 이동
             moveFishes();
 
-            System.out.println("물고기 이동 : ");
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
-                    System.out.print(nFish[j][k] + " ");
-                } System.out.println();
-            } System.out.println();
-
             // 상어의 이동
             moveShark();
-
-            System.out.println("상어 이동 : ");
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
-                    System.out.print(nFish[j][k] + " ");
-                } System.out.println();
-            } System.out.println();
 
             // 냄새 삭제
             removeSmell();
 
             // 물고기 복제
-            for (int j = 0; j < save.size(); j++) {
-                Fish f = save.get(j);
+            while (!save.isEmpty()) {
+                Fish f = save.poll();
                 fishes.add(new Fish(f.r, f.c, f.dir));
                 nFish[f.r][f.c]++;
-            }
-
-            System.out.println("물고기 복제 : ");
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
-                    System.out.print(nFish[j][k] + " ");
-                } System.out.println();
-            } System.out.println();
-
-            save.clear();
-        }
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                answer += nFish[i][j];
             }
         }
 
         System.out.println(fishes.size());
-        System.out.print(answer);
     }
 
     static void moveFishes() {
 
-        for (int i = 0; i < fishes.size(); i++) {
+        Iterator<Fish> it = fishes.iterator();
 
-            Fish f = fishes.get(i);
+        while (it.hasNext()) {
+
+            Fish f = it.next();
             int r = f.r, c = f.c, dir = f.dir;
 
             for (int j = 0; j < 8; j++) {
                 int nr = r + delta[dir][0];
                 int nc = c + delta[dir][1];
                 if (nr < 0 || nc < 0 || nr >= 4 || nc >= 4) {
-                    // 반시계 방향으로 45도 이동
                     dir = (dir + 7) % 8;
                     continue;
                 }
                 if ((nr == shark.r && nc == shark.c) || nSmell[nr][nc] > 0) {
-                    // 반시계 방향으로 45도 이동
                     dir = (dir + 7) % 8;
                     continue;
                 }
@@ -145,19 +115,24 @@ public class Q23290 {
         String route = info.route + "";
 
         for (int i = 0; i < 3; i++) {
+
             int dir = (route.charAt(i) - '0') - 1;
             shark.r += delta2[dir][0];
             shark.c += delta2[dir][1];
 
             nFish[shark.r][shark.c] = 0;
-            for (int j = 0; j < fishes.size(); j++) {
-                Fish f = fishes.get(j);
-                if (f.r == shark.r && f.c == shark.c) {
-                    if(fishes.remove(f);
 
-                    // 물고기 냄새를 남김
+            int len = fishes.size();
+
+            for (int j = 0; j < len; j++) {
+
+                Fish f = fishes.poll();
+
+                if (f.r == shark.r && f.c == shark.c) {
                     smells.add(new Smell(f.r, f.c, 2));
                     nSmell[f.r][f.c]++;
+                } else {
+                    fishes.add(f);
                 }
             }
         }
@@ -195,13 +170,18 @@ public class Q23290 {
     }
 
     static void removeSmell() {
-        for (int i = 0; i < smells.size(); i++) {
-            Smell s = smells.get(i);
+
+        int len = smells.size();
+
+        for (int i = 0; i < len; i++) {
+
+            Smell s = smells.poll();
+
             if (s.time == 0) {
-                smells.remove(s);
                 nSmell[s.r][s.c]--;
             } else {
                 s.time--;
+                smells.add(s);
             }
         }
     }
