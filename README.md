@@ -12,4 +12,3 @@
 - replaceAll() -> 정규식, toBinaryString()
 - GCD, LCM
 - 큐, 리스트 등을 순회만 할 때는 enhanced for 를 사용
-
