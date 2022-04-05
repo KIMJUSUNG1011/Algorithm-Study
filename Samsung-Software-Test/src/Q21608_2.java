@@ -17,8 +17,8 @@ public class Q21608_2 {
             StringTokenizer st = new StringTokenizer(br.readLine(), " ");
             int num = Integer.parseInt(st.nextToken());
             for (int j = 0; j < 4; j++) {
-               int x = Integer.parseInt(st.nextToken());
-               check[num][x] = 1;
+                int x = Integer.parseInt(st.nextToken());
+                check[num][x] = 1;
             }
             process(num);
         }
