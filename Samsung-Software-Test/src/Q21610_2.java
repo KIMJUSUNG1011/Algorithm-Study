@@ -31,8 +31,7 @@ public class Q21610_2 {
             s[i] = Integer.parseInt(st.nextToken());
         }
 
-        int r = N - 2, c = 0;
-        clouds[r][c] = clouds[r + 1][c] = clouds[r][c + 1] = clouds[r + 1][c + 1] = 1;
+        clouds[N - 2][0] = clouds[N - 1][0] = clouds[N - 2][1] = clouds[N - 1][1] = 1;
 
         for (int i = 0; i < M; i++) {
 
