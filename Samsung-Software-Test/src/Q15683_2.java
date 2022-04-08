@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Q15683_2 {
 
-    static int N, M, answer = Integer.MAX_VALUE;
+    static int N, M, nZero, answer = Integer.MAX_VALUE;
     static List<int[]> cctvs = new ArrayList<>();
     static int[][] delta = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
 
@@ -22,81 +22,70 @@ public class Q15683_2 {
                 if (map[i][j] >= 1 && map[i][j] <= 5) {
                     cctvs.add(new int[]{i, j});
                 }
+                if (map[i][j] == 0) {
+                    nZero++;
+                }
             }
         }
 
-        go(0, map);
+        dfs(0, map, 0);
 
         System.out.print(answer);
     }
 
-    static void go(int index, int[][] map) {
+    static void dfs(int index, int[][] map, int nGo) {
 
         if (index == cctvs.size()) {
-            int cnt = 0;
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    if (map[i][j] == 0) {
-                        cnt++;
-                    }
-                }
-            }
-
-            answer = Math.min(answer, cnt);
+            answer = Math.min(answer, nZero - nGo);
             return;
         }
 
+        int[][] tmp;
         int r = cctvs.get(index)[0];
         int c = cctvs.get(index)[1];
-        int num = map[r][c];
-        int[][] tmp;
 
-        if (num == 1) {
+        if (map[r][c] == 1) {
             for (int i = 0; i < 4; i++) {
                 tmp = getCopy(map);
-                process(r, c, i, tmp);
-                go(index + 1, tmp);
+                dfs(index + 1, tmp, nGo + go(r, c, i, tmp));
             }
         }
 
-        if (num == 2) {
+        if (map[r][c] == 2) {
             for (int i = 0; i < 2; i++) {
                 tmp = getCopy(map);
-                process(r, c, i, tmp);
-                process(r, c, i + 2, tmp);
-                go(index + 1, tmp);
+                dfs(index + 1, tmp, nGo + go(r, c, i, tmp) + go(r, c, i + 2, tmp));
             }
         }
 
-        if (num == 3) {
+        if (map[r][c] == 3) {
             for (int i = 0; i < 4; i++) {
                 tmp = getCopy(map);
-                process(r, c, i, tmp);
-                process(r, c, (i + 1) % 4, tmp);
-                go(index + 1, tmp);
+                dfs(index + 1, tmp, nGo + go(r, c, i, tmp) + go(r, c, (i + 1) % 4, tmp));
             }
         }
 
-        if (num == 4) {
+        if (map[r][c] == 4) {
             for (int i = 0; i < 4; i++) {
                 tmp = getCopy(map);
-                process(r, c, i, tmp);
-                process(r, c, (i + 1) % 4, tmp);
-                process(r, c, (i + 3) % 4, tmp);
-                go(index + 1, tmp);
+                dfs(index + 1, tmp, nGo + go(r, c, i, tmp) + go(r, c, (i + 1) % 4, tmp) + go(r, c, (i + 3) % 4, tmp));
             }
         }
 
-        if (num == 5) {
+        if (map[r][c] == 5) {
             tmp = getCopy(map);
-            for (int i = 0; i < 4; i++) { process(r, c, i, tmp); }
-            go(index + 1, tmp);
-            for (int i = 0; i < 4; i++) { process(r, c, i, tmp); }
+            int cnt = 0;
+            for (int i = 0; i < 4; i++) {
+                cnt += go(r, c, i, tmp);
+            }
+            dfs(index + 1, tmp, nGo + cnt);
         }
     }
 
     // r, c 에서 dir 방향으로 감시영역 처리
-    static void process(int r, int c, int dir, int[][] map) {
+    static int go(int r, int c, int dir, int[][] map) {
+
+        int nGo = 0;
 
         while (true) {
             int nr = r + delta[dir][0];
@@ -108,11 +97,14 @@ public class Q15683_2 {
             // 감시영역 생성
             if (map[nr][nc] == 0) {
                 map[nr][nc] = -1;
+                nGo++;
             }
 
             r = nr;
             c = nc;
         }
+
+        return nGo;
     }
 
     static int[][] getCopy(int[][] src) {
