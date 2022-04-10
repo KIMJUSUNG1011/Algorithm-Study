@@ -40,7 +40,7 @@ public class Q17142_2 {
     static void dfs(int index, int cnt) {
 
         if (cnt == M) {
-            answer = Math.min(answer, getTime());
+            bfs();
             return;
         }
 
@@ -57,7 +57,7 @@ public class Q17142_2 {
         dfs(index + 1, cnt);
     }
 
-    static int getTime() {
+    static void bfs() {
 
         int[][] check = new int[N][N];
         int nCopy = 0, time = 0;
@@ -91,17 +91,7 @@ public class Q17142_2 {
         }
 
         if (nCopy == nZero) {
-            return time;
-        } else {
-            return Integer.MAX_VALUE;
+            answer = Math.min(answer, time);
         }
-    }
-
-    static void print(int[][] arr) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.printf("%3d", arr[i][j]);
-            } System.out.println();
-        } System.out.println();
     }
 }
