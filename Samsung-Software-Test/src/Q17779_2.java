@@ -70,40 +70,36 @@ public class Q17779_2 {
         // 1 번 선거구
         for (int i = 0; i < r + d1; i++) {
             for (int j = 0; j <= c; j++) {
-                if (check[i][j] == 5) {
-                    break;
+                if (check[i][j] != 5) {
+                    cnt[0] += map[i][j];
                 }
-                cnt[0] += map[i][j];
             }
         }
 
         // 2 번 선거구
         for (int i = 0; i <= r + d2; i++) {
-            for (int j = N - 1; j > c; j--) {
-                if (check[i][j] == 5) {
-                    break;
+            for (int j = c + 1; j < N; j++) {
+                if (check[i][j] != 5) {
+                    cnt[1] += map[i][j];
                 }
-                cnt[1] += map[i][j];
             }
         }
 
         // 3 번 선거구
         for (int i = r + d1; i < N; i++) {
             for (int j = 0; j < c - d1 + d2; j++) {
-                if (check[i][j] == 5) {
-                    break;
+                if (check[i][j] != 5) {
+                    cnt[2] += map[i][j];
                 }
-                cnt[2] += map[i][j];
             }
         }
 
         // 4 번 선거구
         for (int i = r + d2 + 1; i < N; i++) {
-            for (int j = N - 1; j >= c - d1 + d2; j--) {
-                if (check[i][j] == 5) {
-                    break;
+            for (int j = c - d1 + d2; j < N; j++) {
+                if (check[i][j] != 5) {
+                    cnt[3] += map[i][j];
                 }
-                cnt[3] += map[i][j];
             }
         }
 
