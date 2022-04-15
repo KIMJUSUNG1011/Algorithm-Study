@@ -3,11 +3,10 @@ import java.util.*;
 
 public class Q17822_2 {
 
-    static int N, M, T, answer = 0;
+    static int N, M, T, CNT, answer = 0;
     static int[][] board = new int[50][50];
-    static int[] dir = {1, -1};
     static int[][] delta = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
-    static Queue<int[]> q = new LinkedList<>();
+    static int[] dir = {1, -1};
 
     public static void main(String[] args) throws IOException {
 
@@ -23,46 +22,14 @@ public class Q17822_2 {
             }
         }
 
+        CNT = N * M;
         for (int i = 0; i < T; i++) {
             st = new StringTokenizer(br.readLine(), " ");
             int x = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
             int k = Integer.parseInt(st.nextToken());
-
             rotate(x, d, k);
-
-            int[][] check = new int[N][M];
-            int flag = 0, cnt = 0, sum = 0;
-
-            for (int j = 0; j < N; j++) {
-                for (int m = 0; m < M; m++) {
-                    if (board[j][m] != 0 && check[j][m] == 0) {
-                        int[] res = bfs(j, m, check);
-                        if (res[0] > 1) {
-                            flag = 1;
-                        }
-                        cnt += res[0];
-                        sum += res[1];
-                    }
-                }
-            }
-
-            // 지워진 같은 수가 없는 경우
-            if (flag == 0) {
-                double avg = sum / (double)cnt;
-                for (int j = 0; j < N; j++) {
-                    for (int m = 0; m < M; m++) {
-                        if (board[j][m] == 0) {
-                            continue;
-                        }
-                        if (board[j][m] > avg) {
-                            board[j][m]--;
-                        } else if (board[j][m] < avg) {
-                            board[j][m]++;
-                        }
-                    }
-                }
-            }
+            process();
         }
 
         for (int i = 0; i < N; i++) {
@@ -74,41 +41,61 @@ public class Q17822_2 {
         System.out.print(answer);
     }
 
-    static int[] bfs(int r, int c, int[][] check) {
+    static void process() {
 
-        int cnt = 0, sum = 0;
-        int tmp = board[r][c];
+        int srcCNT = CNT;
+        int sum = 0;
 
-        check[r][c] = 1;
-        q.add(new int[]{r, c});
-
-        while (!q.isEmpty()) {
-            int[] p = q.poll();
-            cnt++;
-            sum += board[p[0]][p[1]];
-            board[p[0]][p[1]] = 0;
-
-            for (int i = 0; i < 4; i++) {
-                int nr = p[0] + delta[i][0];
-                int nc = (p[1] + delta[i][1]) % M;
-                if (nr < 0 || nr >= N) {
-                    continue;
-                }
-                if (nc < 0) {
-                    nc += M;
-                }
-                if (check[nr][nc] == 0 && board[nr][nc] == tmp) {
-                    check[nr][nc] = 1;
-                    q.add(new int[]{nr, nc});
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (board[i][j] != 0) {
+                    sum += board[i][j];
+                    dfs(i, j, board[i][j]);
                 }
             }
         }
 
-        if (cnt == 1) {
-            board[r][c] = tmp;
+        // 지워진 경우
+        if (srcCNT > CNT) {
+            return;
         }
 
-        return new int[]{cnt, sum};
+        // 지워지지 않은 경우
+        double avg = sum / (double)CNT;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (board[i][j] == 0 || board[i][j] == avg) {
+                    continue;
+                }
+                if (board[i][j] > avg) {
+                    board[i][j]--;
+                } else {
+                    board[i][j]++;
+                }
+            }
+        }
+    }
+
+    static void dfs(int r, int c, int src) {
+
+        for (int i = 0; i < 4; i++) {
+            int nr = r + delta[i][0];
+            int nc = c + delta[i][1];
+            if (nr < 0 || nr >= N) {
+                continue;
+            }
+            if (nc < 0) {
+                nc = M - 1;
+            }
+            if (nc >= M) {
+                nc = 0;
+            }
+            if (board[nr][nc] == src) {
+                CNT--;
+                board[nr][nc] = 0;
+                dfs(nr, nc, src);
+            }
+        }
     }
 
     static void rotate(int x, int d, int k) {
