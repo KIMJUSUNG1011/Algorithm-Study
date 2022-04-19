@@ -1,12 +1,9 @@
 import java.io.*;
-import java.util.*;
 
 public class Q16637_2 {
 
-    static int N, nNum = 0, nOp = 0, answer = Integer.MIN_VALUE;
-    static int[] num = new int[10];
-    static char[] op = new char[9];
-    static int[] check = new int[10];
+    static int N, answer = Integer.MIN_VALUE;
+    static int[] arr = new int[19];
 
     public static void main(String[] args) throws IOException {
 
@@ -14,33 +11,51 @@ public class Q16637_2 {
         N = Integer.parseInt(br.readLine());
         String s = br.readLine();
         for (int i = 0; i < N; i++) {
-            if (i % 2 == 0) {
-                num[nNum++] = s.charAt(i) - '0';
-            } else {
-                op[nOp++] = s.charAt(i);
-            }
+            arr[i] = s.charAt(i) - '0';
         }
+
+        dfs(0, 0);
+
+        System.out.print(answer);
     }
 
     static void dfs(int index, int sum) {
 
-        if (index >= nNum) {
+        if (index >= N) {
+            answer = Math.max(answer, sum);
             return;
         }
 
-        int res = 0;
+        int op = 0;
 
-        check[index] = 1;
-        if (index < N - 1) {
-            calc(num[index], num[index + 1], op[index]);
-            dfs(index + 2, sum + );
+        if (arr[index] < 0 || arr[index] > 9) {
+            op = arr[index];
+            index++;
         }
 
-        check[index] = 0;
-        dfs(index + 1);
+        int res = arr[index];
+
+        // 괄호를 치는 경우
+        if (index < N - 1) {
+            dfs(index + 3, calc(sum, calc(res, arr[index + 2], arr[index + 1]), op));
+        }
+
+        // 괄호를 치지 않는 경우
+        dfs(index + 1, calc(sum, res, op));
     }
 
-    static int calc(int a, int b, char p) {
-        return 0;
+    static int calc(int a, int b, int p) {
+
+        char c = (char)(p + '0');
+
+        if (c == '-') {
+            return a - b;
+        }
+
+        if (c == '*') {
+            return a * b;
+        }
+
+        return a + b;
     }
 }
