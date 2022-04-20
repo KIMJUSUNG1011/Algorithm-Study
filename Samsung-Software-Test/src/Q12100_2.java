@@ -15,10 +15,13 @@ public class Q12100_2 {
             StringTokenizer st = new StringTokenizer(br.readLine(), " ");
             for (int j = 0; j < N; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
+                answer = Math.max(answer, map[i][j]);
             }
         }
 
-        dfs(0, map);
+        for (int i = 0; i < 4; i++) {
+            dfs(0, rotate(map, i));
+        }
 
         System.out.print(answer);
     }
@@ -29,105 +32,59 @@ public class Q12100_2 {
             return;
         }
 
-        move(map);
-
         for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                answer = Math.max(answer, map[i][j]);
-            }
+            combine(map[i]);
         }
 
         for (int i = 0; i < 4; i++) {
-            int[][] tmp = rotate(map);
-            dfs(index + 1, tmp);
-            map = tmp;
+            dfs(index + 1, rotate(map, i));
         }
     }
 
-    static int[][] rotate(int[][] src) {
+    static int[][] rotate(int[][] src, int num) {
 
         int[][] dst = new int[N][N];
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                dst[j][N - 1 - i] = src[i][j];
+                if (num == 0) {
+                    dst[i][j] = src[i][j];
+                } else if (num == 1) {
+                    dst[j][N - 1 - i] = src[i][j];
+                } else if (num == 2) {
+                    dst[N - 1 - i][N - 1 - j] = src[i][j];
+                } else if (num == 3) {
+                    dst[N - 1 - j][i] = src[i][j];
+                }
             }
         }
 
         return dst;
     }
 
-    static void move(int[][] map) {
+    static void combine(int[] arr) {
+
+        int lastNum = 0, inputPos = 0;
 
         for (int i = 0; i < N; i++) {
-            tilt(map[i]);
-            add(map[i]);
-        }
-    }
 
-    static void tilt(int[] arr) {
-
-        int blankPos = -1;
-
-        for (int i = 0; i < N; i++) {
             if (arr[i] == 0) {
-                blankPos = i;
-                break;
+                continue;
             }
-        }
 
-        if (blankPos == -1) {
-            return;
-        }
-
-        for (int i = 0; i < N; i++) {
-            if (arr[i] > 0 && i > blankPos) {
-                arr[blankPos] = arr[i];
+            if (lastNum == arr[i]) {
+                arr[inputPos - 1] *= 2;
+                answer = Math.max(answer, arr[inputPos - 1]);
                 arr[i] = 0;
-                blankPos++;
+                lastNum = 0;
+            } else {
+                arr[inputPos] = arr[i];
+                if (inputPos < i) {
+                    arr[i] = 0;
+                }
+                lastNum = arr[inputPos];
+                inputPos++;
             }
         }
-    }
-
-    static void add(int[] arr) {
-
-        int blankPos = -1, pos = 0;
-
-        while (true) {
-
-            if (pos >= N || arr[pos] == 0) {
-                break;
-            }
-
-            if (pos == N - 1 || (arr[pos] != arr[pos + 1])) {
-                if (blankPos > -1) {
-                    arr[blankPos] = arr[pos];
-                    arr[pos] = 0;
-                    blankPos++;
-                }
-                pos++;
-                continue;
-            }
-
-            if (arr[pos] == arr[pos + 1]) {
-                if (blankPos == -1) {
-                    blankPos = 0;
-                }
-                int val = arr[pos] * 2;
-                arr[pos] = arr[pos + 1] = 0;
-                arr[blankPos] = val;
-                blankPos++;
-                pos += 2;
-                continue;
-            }
-        }
-    }
-
-    static void print(int[][] map) {
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                System.out.print(map[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
