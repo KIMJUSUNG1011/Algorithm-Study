@@ -83,6 +83,7 @@ public class Q20061_2 {
             }
         }
 
+        // 점수 획득
         for (int i = 5; i >= 0; i--) {
             if (deleteRow[i] == 0) {
                 for (int j = 0; j < 4; j++) {
@@ -94,6 +95,7 @@ public class Q20061_2 {
             }
         }
 
+        // 높이 업데이트
         for (int i = 0; i < 4; i++) {
             height[color][i] = 5;
             for (int j = 0; j < 6; j++) {
@@ -102,6 +104,9 @@ public class Q20061_2 {
                     break;
                 }
             }
+        }
+
+        for (int i = 0; i < 4; i++) {
             minRow = Math.min(minRow, height[color][i]);
         }
 
@@ -126,16 +131,5 @@ public class Q20061_2 {
         }
 
         map[color] = tmpMap[color];
-    }
-
-    static void print(int[][] map, int[] row) {
-        for (int i = 0; i < 4; i++) {
-            System.out.print(row[i] + " ");
-        } System.out.println();
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(map[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
