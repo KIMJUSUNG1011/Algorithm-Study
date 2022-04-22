@@ -21,6 +21,17 @@ public class Q17136_2 {
             }
         }
 
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                for (int k = 1; k <= 5; k++) {
+                    if (check(i, j, k) == -1) {
+                        break;
+                    }
+                    maxPaper[i][j] = k;
+                }
+            }
+        }
+
         dfs(0, 0, 0);
 
         if (answer == 25) {
@@ -36,6 +47,11 @@ public class Q17136_2 {
             index++;
         }
 
+        if (cnt >= answer) {
+            return;
+        }
+
+        int flag = 0;
         int r = index / 10;
         int c = index % 10;
 
@@ -46,9 +62,11 @@ public class Q17136_2 {
             return;
         }
 
-        for (int i = 1; i <= 5; i++) {
-            if (check(r, c, i) == -1) {
-                break;
+        for (int i = maxPaper[r][c]; i >= 1; i--) {
+            if (flag == 0 && check(r, c, i) == -1) {
+                continue;
+            } else {
+                flag = 1;
             }
             if (paper[i] > 0) {
                 paper[i]--;
@@ -61,8 +79,6 @@ public class Q17136_2 {
     }
 
     static int check(int r, int c, int len) {
-
-        /*
         for (int i = r; i < r + len; i++) {
             for (int j = c; j < c + len; j++) {
                 if (i < 0 || j < 0 || i >= 10 || j >= 10) {
@@ -73,7 +89,6 @@ public class Q17136_2 {
                 }
             }
         }
-         */
         return 0;
     }
 
@@ -87,13 +102,5 @@ public class Q17136_2 {
                 }
             }
         }
-    }
-
-    static void print() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                System.out.print(map[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
