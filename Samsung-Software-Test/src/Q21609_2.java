@@ -33,7 +33,15 @@ public class Q21609_2 {
 
     static int play() {
 
-        init();
+        // 초기화
+        CNT = 1;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                check[i][j] = 0;
+                info[i][j][0] = info[i][j][1] = info[i][j][2] = 0;
+            }
+        }
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -45,31 +53,15 @@ public class Q21609_2 {
             }
         }
 
-        int[] p = getBlock();
-
-        if (p[0] == -1 || info[p[0]][p[1]][1] < 2) {
+        if (delete() == -1) {
             return -1;
         }
-
-        dfs(p[0], p[1], map[p[0]][p[1]], 1);
-        answer += info[p[0]][p[1]][1] * info[p[0]][p[1]][1];
 
         gravity();
         rotate();
         gravity();
 
         return 0;
-    }
-
-    static void init() {
-
-        CNT = 1;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                check[i][j] = 0;
-                info[i][j][0] = info[i][j][1] = info[i][j][2] = 0;
-            }
-        }
     }
 
     static int[] dfs(int r, int c, int num, int flag) {
@@ -96,8 +88,8 @@ public class Q21609_2 {
             if (map[nr][nc] == 0 || map[nr][nc] == num) {
                 check[nr][nc] = CNT;
                 int[] res = dfs(nr, nc, num, flag);
-                size += res[1];
-                nZero += res[2];
+                size += res[0];
+                nZero += res[1];
             }
         }
 
@@ -105,30 +97,39 @@ public class Q21609_2 {
             map[r][c] = -2;
         }
 
-        return new int[]{1, size, nZero};
+        return new int[]{size, nZero, 1};
     }
 
-    static int[] getBlock() {
+    static int delete() {
 
         int r = -1, c = -1, maxSize = -1, maxZeroSize = -1;
+
         for (int i = N - 1; i >= 0; i--) {
             for (int j = N - 1; j >= 0; j--) {
-                if (info[i][j][0] == 1) {
-                    if (info[i][j][1] > maxSize) {
-                        r = i;
-                        c = j;
-                        maxSize = info[i][j][1];
-                        maxZeroSize = info[i][j][2];
-                    } else if (info[i][j][1] == maxSize && info[i][j][2] > maxZeroSize) {
-                        r = i;
-                        c = j;
-                        maxZeroSize = info[i][j][2];
-                    }
+                if (info[i][j][2] == 0) {
+                    continue;
+                }
+                if ((info[i][j][0] > maxSize) ||
+                        info[i][j][0] == maxSize && info[i][j][1] > maxZeroSize) {
+                    r = i;
+                    c = j;
+                    maxSize = info[i][j][0];
+                    maxZeroSize = info[i][j][1];
                 }
             }
         }
 
-        return new int[]{r, c};
+        // 블록 그룹이 없음
+        if (maxSize < 2) {
+            return -1;
+        }
+
+        // 가장 큰 블록 그룹 삭제
+        dfs(r, c, map[r][c], 1);
+
+        answer += info[r][c][0] * info[r][c][0];
+
+        return 0;
     }
 
     static void rotate() {
@@ -139,7 +140,11 @@ public class Q21609_2 {
                 tmp[N - 1 - j][i] = map[i][j];
             }
         }
-        map = tmp;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                map[i][j] = tmp[i][j];
+            }
+        }
     }
 
     static void gravity() {
