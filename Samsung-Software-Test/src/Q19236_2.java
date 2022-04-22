@@ -4,7 +4,7 @@ import java.util.*;
 public class Q19236_2 {
 
     static int answer = -1;
-    static int[] shark = new int[3];
+    static int sharkDir = -1;
     static int[][] delta = {{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
 
     public static void main(String[] args) throws IOException {
@@ -25,9 +25,9 @@ public class Q19236_2 {
         }
 
         int num = map[0][0];
-        shark[2] = fish[num][2];
         fish[num][3] = 1;
         map[0][0] = -1;
+        sharkDir = fish[num][2];
         dfs(0, 0, num, map, fish);
 
         System.out.print(answer);
@@ -35,14 +35,14 @@ public class Q19236_2 {
 
     static void dfs(int r, int c, int sum, int[][] map, int[][] fish) {
 
-        int prev = shark[2];
+        int prevDir = sharkDir;
 
         move(map, fish);
 
         for (int i = 1; i <= 3; i++) {
 
-            int nr = r + delta[shark[2]][0] * i;
-            int nc = c + delta[shark[2]][1] * i;
+            int nr = r + delta[sharkDir][0] * i;
+            int nc = c + delta[sharkDir][1] * i;
 
             if ((nr < 0 || nc < 0 || nr >= 4 || nc >= 4) || map[nr][nc] == 0) {
                 continue;
@@ -51,13 +51,13 @@ public class Q19236_2 {
             int[][] tmpMap = copy(map);
             int[][] tmpFish = copy(fish);
 
-            int num = map[nr][nc];
-            shark[2] = fish[num][2];
+            int num = tmpMap[nr][nc];
             tmpFish[num][3] = 1;
+            sharkDir = fish[num][2];
             tmpMap[r][c] = 0;
             tmpMap[nr][nc] = -1;
             dfs(nr, nc, sum + num, tmpMap, tmpFish);
-            shark[2] = prev;
+            sharkDir = prevDir;
         }
 
         answer = Math.max(answer, sum);
@@ -118,13 +118,5 @@ public class Q19236_2 {
             }
         }
         return dst;
-    }
-
-    static void print(int[][] map) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                System.out.print(map[i][j] + " ");
-            } System.out.println();
-        } System.out.println();
     }
 }
